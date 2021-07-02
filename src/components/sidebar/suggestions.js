@@ -23,7 +23,6 @@ export default function Suggestions({ userId, following, loggedInUserDocId }) {
   // call the async function ^^^^ within useEffect
   // store it in state
   // go ahead and render (wait on the profiles as in 'skeleton')
-  debugger;
   return !profiles ? (
     <Skeleton count={1} height={150} className="mt-5" />
   ) : profiles.length > 0 ? (

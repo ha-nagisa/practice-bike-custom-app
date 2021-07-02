@@ -116,7 +116,6 @@ export async function isUserFollowingProfile(loggedInUserUsername, profileUserId
     .where('username', '==', loggedInUserUsername) // karl (active logged in user)
     .where('following', 'array-contains', profileUserId)
     .get();
-
   const [response = {}] = result.docs.map((item) => ({
     ...item.data(),
     docId: item.id,
