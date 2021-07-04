@@ -41,7 +41,7 @@ Profile.propTypes = {
     emailAddress: PropTypes.string,
     followers: PropTypes.array,
     following: PropTypes.array,
-    fullName: PropTypes.string,
+    carModel: PropTypes.string,
     userId: PropTypes.string,
     username: PropTypes.string,
   }),

@@ -19,7 +19,7 @@ export default function Header() {
           <div className="text-gray-700 text-center flex items-center align-items cursor-pointer">
             <h1 className="flex justify-center w-full">
               <Link to={ROUTES.DASHBOARD} aria-label="Instagram logo">
-                <img src="/images/logo.png" alt="Instagram" className="mt-2 w-6/12" />
+                <img src="/images/smLoginLogo.png" alt="bun bun bike" width="200px" className="mt-2" />
               </Link>
             </h1>
           </div>
@@ -76,8 +76,8 @@ export default function Header() {
                   <div className="flex items-center cursor-pointer">
                     <Link to={`/p/${user?.username}`}>
                       <img
-                        className="rounded-full h-8 w-8 flex"
-                        src={`/images/avatars/${user?.username}.jpg`}
+                        className="object-cover w-8 h-8 rounded-full flex"
+                        src={user.bikeImageUrl}
                         alt={`${user?.username} profile`}
                         onError={(e) => {
                           e.target.src = DEFAULT_IMAGE_PATH;

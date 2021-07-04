@@ -11,7 +11,15 @@ export default function Header({
   photosCount,
   followerCount,
   setFollowerCount,
-  profile: { docId: profileDocId, userId: profileUserId, fullName, followers, following, username: profileUsername },
+  profile: {
+    docId: profileDocId,
+    userId: profileUserId,
+    bikeImageUrl: profileBikeImageUrl,
+    carModel,
+    followers,
+    following,
+    username: profileUsername,
+  },
 }) {
   const { user: loggedInUser } = useContext(UserContext);
   const { user } = useUser(loggedInUser?.uid);
@@ -40,13 +48,13 @@ export default function Header({
   return (
     <div className="grid grid-cols-3 gap-4 justify-between mx-auto max-w-screen-lg">
       <div className="container flex justify-center items-center">
-        {profileUsername ? (
+        {profileBikeImageUrl ? (
           <img
-            className="rounded-full h-40 w-40 flex"
-            alt={`${fullName} profile picture`}
-            src={`/images/avatars/${profileUsername}.jpg`}
+            className="inline object-cover w-40 h-40 mr-2 rounded-full"
+            alt={`${carModel} profile picture`}
+            src={profileBikeImageUrl}
             onError={(e) => {
-              e.target.src = DEFAULT_IMAGE_PATH;
+              e.target.src = `/images/avatars/default.png`;
             }}
           />
         ) : (
@@ -95,7 +103,7 @@ export default function Header({
           )}
         </div>
         <div className="container mt-4">
-          <p className="font-medium">{!fullName ? <Skeleton count={1} height={24} /> : fullName}</p>
+          <p className="font-medium">{!carModel ? <Skeleton count={1} height={24} /> : carModel}</p>
         </div>
       </div>
     </div>
@@ -109,7 +117,8 @@ Header.propTypes = {
   profile: PropTypes.shape({
     docId: PropTypes.string,
     userId: PropTypes.string,
-    fullName: PropTypes.string,
+    bikeImageUrl: PropTypes.string,
+    carModel: PropTypes.string,
     username: PropTypes.string,
     followers: PropTypes.array,
     following: PropTypes.array,

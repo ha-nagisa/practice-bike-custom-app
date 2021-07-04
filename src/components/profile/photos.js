@@ -13,7 +13,7 @@ export default function Photos({ photos }) {
               <div key={photo.docId} className="relative group">
                 <img src={photo.imageSrc} alt={photo.caption} />
 
-                <div className="absolute bottom-0 left-0 bg-gray-200 z-10 w-full justify-evenly items-center h-full bg-black-faded group-hover:flex hidden">
+                <div className="absolute bottom-0 left-0 z-10 w-full justify-evenly items-center h-full bg-black-faded group-hover:flex hidden opacity-70">
                   <p className="flex items-center text-white font-bold">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-8 mr-4">
                       <path

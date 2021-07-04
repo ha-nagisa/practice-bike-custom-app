@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom';
 import Skeleton from 'react-loading-skeleton';
 import { DEFAULT_IMAGE_PATH } from '../../constants/paths';
 
-export default function User({ username, fullName }) {
-  return !username || !fullName ? (
+export default function User({ username, carModel, bikeImageUrl }) {
+  return !username || !carModel ? (
     <Skeleton count={1} height={61} />
   ) : (
     <Link to={`/p/${username}`} className="grid grid-cols-4 gap-4 mb-6 items-center">
       <div className="flex items-center justify-between col-span-1">
         <img
-          className="rounded-full w-16 flex mr-3"
-          src={`/images/avatars/${username}.jpg`}
+          className="rounded-full bject-cover w-16 h-16 flex"
+          src={bikeImageUrl}
           alt=""
           onError={(e) => {
             e.target.src = DEFAULT_IMAGE_PATH;
@@ -20,7 +20,7 @@ export default function User({ username, fullName }) {
       </div>
       <div className="col-span-3">
         <p className="font-bold text-sm">{username}</p>
-        <p className="text-sm">{fullName}</p>
+        <p className="text-sm">{carModel}</p>
       </div>
     </Link>
   );
@@ -28,5 +28,6 @@ export default function User({ username, fullName }) {
 
 User.propTypes = {
   username: PropTypes.string,
-  fullName: PropTypes.string,
+  carModel: PropTypes.string,
+  bikeImageUrl: PropTypes.string,
 };

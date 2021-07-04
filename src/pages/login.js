@@ -31,15 +31,16 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="container flex mx-auto max-w-screen-md items-center h-screen">
-      <div className="flex w-3/5">
-        <img src="/images/iphone-with-profile.jpg" alt="iPhone with Instagram app" />
+    <div className="container flex mx-auto max-w-screen-lg items-center h-screen px-3 py-3 sm:py-0">
+      <div className="hidden sm:flex w-1/2 shadow-lg">
+        <img src="/images/loginLogo.png" alt="Bun Bun BIKE" />
       </div>
-      <div className="flex flex-col w-2/5">
-        <div className="flex flex-col items-center bg-white p-4 border border-gray-primary mb-4 rounded">
-          <h1 className="flex justify-center w-full">
-            <img src="/images/logo.png" alt="Instagram" className="mt-2 w-6/12 mb-4" />
-          </h1>
+      <div className="flex flex-col w-full sm:w-1/2 sm:pt-harf sm:relative sm:border-0">
+        <div className="flex flex-col items-center w-19/20 sm:w-4/5 bg-white p-4 mb-4 rounded mx-auto sm:mx-0 sm:absolute sm:top-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2 shadow-lg">
+          <div className="mb-5 block sm:hidden">
+            <img src="/images/smLoginLogo.png" alt="Bun Bun BIKE" width="300px" />
+          </div>
+          <h1 className="hidden sm:flex justify-center w-full font-logoFont font-bold mb-5 text-2xl">LOGIN</h1>
 
           {error && <p className="mb-4 text-xs text-red-primary">{error}</p>}
 
@@ -48,7 +49,7 @@ export default function Login() {
               aria-label="Enter your email address"
               type="text"
               placeholder="Email address"
-              className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
+              className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border-2 border-gray-primary focus:outline-none focus:ring-2 focus:ring-logoColor-light rounded mb-4 focus:border-transparent"
               onChange={({ target }) => setEmailAddress(target.value)}
               value={emailAddress}
             />
@@ -56,24 +57,22 @@ export default function Login() {
               aria-label="Enter your password"
               type="password"
               placeholder="Password"
-              className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
+              className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border-2 border-gray-primary focus:outline-none focus:ring-2 focus:ring-logoColor-light rounded mb-4 focus:border-transparent"
               onChange={({ target }) => setPassword(target.value)}
               value={password}
             />
             <button
               disabled={isInvalid}
               type="submit"
-              className={`bg-blue-medium text-white w-full rounded h-8 font-bold
+              className={`bg-logoColor-base text-white w-full rounded h-10 font-bold mb-2
             ${isInvalid && 'opacity-50'}`}
             >
               Login
             </button>
           </form>
-        </div>
-        <div className="flex justify-center items-center flex-col w-full bg-white p-4 rounded border border-gray-primary">
           <p className="text-sm">
             Don't have an account?{` `}
-            <Link to={ROUTES.SIGN_UP} className="font-bold text-blue-medium">
+            <Link to={ROUTES.SIGN_UP} className="font-bold text-logoColor-base">
               Sign up
             </Link>
           </p>
