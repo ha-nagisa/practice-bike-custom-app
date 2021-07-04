@@ -9,12 +9,19 @@ export default function Timeline() {
   const { photos } = usePhotos(user);
 
   return (
-    <div className="container col-span-2">
+    <>
       {!photos ? (
-        <Skeleton count={4} width={640} height={500} className="mb-5" />
+        <>
+          <div className="col-span-2">
+            <Skeleton count={4} height={400} className="mb-5" />
+          </div>
+          <div className="col-span-2">
+            <Skeleton count={4} height={400} className="mb-5" />
+          </div>
+        </>
       ) : (
         photos.map((content) => <Post key={content.docId} content={content} />)
       )}
-    </div>
+    </>
   );
 }

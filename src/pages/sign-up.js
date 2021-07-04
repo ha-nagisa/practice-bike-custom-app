@@ -102,7 +102,7 @@ export default function SignUp() {
           <div className="mb-5 block sm:hidden">
             <img src="/images/smLoginLogo.png" alt="Bun Bun BIKE" width="300px" />
           </div>
-          <h1 className="hidden sm:flex justify-center w-full font-logoFont font-bold mb-5 text-2xl">SIGIN UP</h1>
+          <h1 className="hidden sm:flex justify-center w-full font-logoFont font-bold mb-5 text-2xl">サインアップ</h1>
 
           {error && <p className="mb-4 text-xs text-red-primary">{error}</p>}
 
@@ -382,9 +382,9 @@ export default function SignUp() {
             </button>
           </form>
           <p className="text-sm">
-            Have an account?{` `}
+            アカウントを既にお持ちですか？{` `}
             <Link to={ROUTES.LOGIN} className="font-bold text-logoColor-base">
-              Login
+              ログイン
             </Link>
           </p>
         </div>

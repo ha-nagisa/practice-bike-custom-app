@@ -7,10 +7,10 @@ export default function User({ username, carModel, bikeImageUrl }) {
   return !username || !carModel ? (
     <Skeleton count={1} height={61} />
   ) : (
-    <Link to={`/p/${username}`} className="grid grid-cols-4 gap-4 mb-6 items-center">
-      <div className="flex items-center justify-between col-span-1">
+    <Link to={`/p/${username}`} className="grid grid-cols-5 gap-4 mb-6 items-center">
+      <div className="flex items-center justify-between col-span-2">
         <img
-          className="rounded-full bject-cover w-16 h-16 flex"
+          className="rounded-full bject-cover w-14 h-14 flex"
           src={bikeImageUrl}
           alt=""
           onError={(e) => {

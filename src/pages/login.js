@@ -40,7 +40,7 @@ export default function Login() {
           <div className="mb-5 block sm:hidden">
             <img src="/images/smLoginLogo.png" alt="Bun Bun BIKE" width="300px" />
           </div>
-          <h1 className="hidden sm:flex justify-center w-full font-logoFont font-bold mb-5 text-2xl">LOGIN</h1>
+          <h1 className="hidden sm:flex justify-center w-full font-logoFont font-bold mb-5 text-2xl">ログイン</h1>
 
           {error && <p className="mb-4 text-xs text-red-primary">{error}</p>}
 
@@ -48,7 +48,7 @@ export default function Login() {
             <input
               aria-label="Enter your email address"
               type="text"
-              placeholder="Email address"
+              placeholder="メールアドレス"
               className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border-2 border-gray-primary focus:outline-none focus:ring-2 focus:ring-logoColor-light rounded mb-4 focus:border-transparent"
               onChange={({ target }) => setEmailAddress(target.value)}
               value={emailAddress}
@@ -56,7 +56,7 @@ export default function Login() {
             <input
               aria-label="Enter your password"
               type="password"
-              placeholder="Password"
+              placeholder="パスワード"
               className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border-2 border-gray-primary focus:outline-none focus:ring-2 focus:ring-logoColor-light rounded mb-4 focus:border-transparent"
               onChange={({ target }) => setPassword(target.value)}
               value={password}
@@ -71,9 +71,9 @@ export default function Login() {
             </button>
           </form>
           <p className="text-sm">
-            Don't have an account?{` `}
+            アカウントをお持ちでないですか？{` `}
             <Link to={ROUTES.SIGN_UP} className="font-bold text-logoColor-base">
-              Sign up
+              サインアップ
             </Link>
           </p>
         </div>
