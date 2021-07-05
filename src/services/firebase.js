@@ -22,7 +22,6 @@ export async function getUserByUserId(userId) {
     ...item.data(),
     docId: item.id,
   }));
-  console.log();
   return user;
 }
 
@@ -76,6 +75,62 @@ export async function updateFollowedUserFollowers(
 export async function getPhotos(userId, following) {
   // [5,4,2] => following
   const result = await firebase.firestore().collection('photos').where('userId', 'in', following).get();
+
+  const userFollowedPhotos = result.docs.map((photo) => ({
+    ...photo.data(),
+    docId: photo.id,
+  }));
+
+  const photosWithUserDetails = await Promise.all(
+    userFollowedPhotos.map(async (photo) => {
+      let userLikedPhoto = false;
+      if (photo.likes.includes(userId)) {
+        userLikedPhoto = true;
+      }
+      // photo.userId = 2
+      const user = await getUserByUserId(photo.userId);
+      // raphael
+      const { username } = user[0];
+      return { username, ...photo, userLikedPhoto };
+    })
+  );
+
+  return photosWithUserDetails;
+}
+
+export async function getPhotosFavorite(userId, likes) {
+  const result = await firebase.firestore().collection('photos').get();
+
+  const photoAll = result.docs.map((photo) => ({
+    ...photo.data(),
+    docId: photo.id,
+  }));
+
+  const likesPhotos = likes.map((likedDocId) => {
+    const a = { ...photoAll.filter((photo) => photo.docId === likedDocId) };
+    return a[0];
+  });
+
+  const photosWithUserDetails = await Promise.all(
+    likesPhotos.map(async (photo) => {
+      let userLikedPhoto = false;
+      if (photo.likes.includes(userId)) {
+        userLikedPhoto = true;
+      }
+      // photo.userId = 2
+      const user = await getUserByUserId(photo.userId);
+      // raphael
+      const { username } = user[0];
+      return { username, ...photo, userLikedPhoto };
+    })
+  );
+
+  return photosWithUserDetails;
+}
+
+export async function getPhotosAll(userId) {
+  // [5,4,2] => following
+  const result = await firebase.firestore().collection('photos').orderBy('dateCreated').limit(100).get();
 
   const userFollowedPhotos = result.docs.map((photo) => ({
     ...photo.data(),

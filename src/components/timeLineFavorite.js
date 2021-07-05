@@ -1,12 +1,13 @@
 import { useContext } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import LoggedInUserContext from '../context/logged-in-user';
-import usePhotosAll from '../hooks/use-photos-all';
+import usePhotosFavorite from '../hooks/use-photos-favorite';
 import Post from './post';
 
-export default function TimelineAll() {
+export default function TimelineFavorite() {
   const { user } = useContext(LoggedInUserContext);
-  const { photos } = usePhotosAll(user);
+  const { photos } = usePhotosFavorite(user);
+
   return (
     <>
       {!photos ? (

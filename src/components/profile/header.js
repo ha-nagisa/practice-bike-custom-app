@@ -16,6 +16,7 @@ export default function Header({
     userId: profileUserId,
     bikeImageUrl: profileBikeImageUrl,
     carModel,
+    maker,
     followers,
     following,
     username: profileUsername,
@@ -49,21 +50,33 @@ export default function Header({
     <div className="grid grid-cols-3 gap-4 justify-between mx-auto max-w-screen-lg">
       <div className="container flex justify-center items-center">
         {profileBikeImageUrl ? (
-          <img
-            className="inline object-cover w-40 h-40 mr-2 rounded-full"
-            alt={`${carModel} profile picture`}
-            src={profileBikeImageUrl}
-            onError={(e) => {
-              e.target.src = `/images/avatars/default.png`;
-            }}
-          />
+          <div className="text-center">
+            <img
+              className="inline object-cover w-40 h-40 mr-2 rounded-full"
+              alt={`${carModel} profile picture`}
+              src={profileBikeImageUrl}
+              onError={(e) => {
+                e.target.src = `/images/avatars/default.png`;
+              }}
+            />
+            <div className="container mt-3">
+              <p className="text-xl font-medium text-center">
+                {!maker ? <Skeleton count={1} height={24} /> : maker}
+                {'　'}
+                {!carModel ? <Skeleton count={1} height={24} /> : carModel}
+              </p>
+            </div>
+          </div>
         ) : (
           <Skeleton circle height={150} width={150} count={1} />
         )}
       </div>
       <div className="flex items-center justify-center flex-col col-span-2">
         <div className="container flex items-center">
-          <p className="text-2xl mr-4">{profileUsername}</p>
+          <p className="text-2xl mr-4">
+            <span className="text-xs block">ユーザーネーム</span>
+            {profileUsername}
+          </p>
           {activeBtnFollow && isFollowingProfile === null ? (
             <Skeleton count={1} width={80} height={32} />
           ) : (
@@ -102,9 +115,6 @@ export default function Header({
             </>
           )}
         </div>
-        <div className="container mt-4">
-          <p className="font-medium">{!carModel ? <Skeleton count={1} height={24} /> : carModel}</p>
-        </div>
       </div>
     </div>
   );
@@ -119,6 +129,7 @@ Header.propTypes = {
     userId: PropTypes.string,
     bikeImageUrl: PropTypes.string,
     carModel: PropTypes.string,
+    maker: PropTypes.string,
     username: PropTypes.string,
     followers: PropTypes.array,
     following: PropTypes.array,
