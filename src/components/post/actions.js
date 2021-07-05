@@ -2,11 +2,13 @@ import { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import FirebaseContext from '../../context/firebase';
 import UserContext from '../../context/user';
+import useUser from '../../hooks/use-user';
 
 export default function Actions({ docId, totalLikes, likedPhoto, handleFocus }) {
   const {
     user: { uid: userId },
   } = useContext(UserContext);
+  const { user: userSore } = useUser(userId);
   const [toggleLiked, setToggleLiked] = useState(likedPhoto);
   const [likes, setLikes] = useState(totalLikes);
   const { firebase, FieldValue } = useContext(FirebaseContext);
@@ -23,6 +25,14 @@ export default function Actions({ docId, totalLikes, likedPhoto, handleFocus }) 
       });
 
     setLikes((likes) => (toggleLiked ? likes - 1 : likes + 1));
+
+    await firebase
+      .firestore()
+      .collection('users')
+      .doc(userSore.docId)
+      .update({
+        likes: toggleLiked ? FieldValue.arrayRemove(docId) : FieldValue.arrayUnion(docId),
+      });
   };
 
   return (

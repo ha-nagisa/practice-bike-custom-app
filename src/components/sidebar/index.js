@@ -8,7 +8,6 @@ export default function Sidebar() {
 
   return (
     <div className="p-4">
-      <User username={username} carModel={carModel} bikeImageUrl={bikeImageUrl} />
       <Suggestions userId={userId} following={following} loggedInUserDocId={docId} />
     </div>
   );

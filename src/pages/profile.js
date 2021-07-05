@@ -4,6 +4,7 @@ import { getUserByUsername } from '../services/firebase';
 import * as ROUTES from '../constants/routes';
 import Header from '../components/header';
 import UserProfile from '../components/profile';
+import PostIcon from '../components/postIcon';
 
 export default function Profile() {
   const { username } = useParams();
@@ -24,11 +25,12 @@ export default function Profile() {
   }, [username, history]);
 
   return user?.username ? (
-    <div className="bg-gray-background">
+    <div className="bg-gray-background relative">
       <Header />
       <div className="mx-auto max-w-screen-lg">
         <UserProfile user={user} />
       </div>
+      <PostIcon />
     </div>
   ) : null;
 }

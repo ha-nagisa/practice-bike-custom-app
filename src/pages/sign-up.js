@@ -67,9 +67,11 @@ export default function SignUp() {
           username: username.toLowerCase(),
           bikeImageUrl: url,
           carModel,
+          maker,
           emailAddress: emailAddress.toLowerCase(),
           following: [],
           followers: [],
+          likes: [],
           dateCreated: Date.now(),
         });
 
@@ -149,9 +151,7 @@ export default function SignUp() {
               <option value="" className="hidden">
                 メーカー
               </option>
-              <option value="1" selected>
-                ホンダ | HONDA
-              </option>
+              <option value="HONDA">ホンダ | HONDA</option>
               <option value="YAMAHA">ヤマハ | YAMAHA</option>
               <option value="SUZUKI">スズキ | SUZUKI</option>
               <option value="KAWASAKI">カワサキ | KAWASAKI</option>

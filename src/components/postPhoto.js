@@ -48,6 +48,7 @@ export default function PostPhoto() {
         workImageUrl = await firebase.storage().ref('posts').child(fileName).getDownloadURL();
       }
       await firebase.firestore().collection('photos').add({
+        title,
         userId: user.userId,
         description,
         imageSrc: workImageUrl,
@@ -68,25 +69,6 @@ export default function PostPhoto() {
   return (
     <div className="flex items-center justify-center mb-12">
       <form className="grid bg-white rounded-lg shadow-xl w-11/12 md:w-9/12 lg:w-3/5" onSubmit={handlePostPhoto} method="POST">
-        <div className="flex justify-center py-4">
-          <div className="flex bg-logoColor-light rounded-full md:p-4 p-2 border-2 border-black-light">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-              />
-            </svg>
-          </div>
-        </div>
-
-        <div className="flex justify-center">
-          <div className="flex">
-            <h1 className="text-gray-600 font-bold md:text-2xl text-xl">GB 350</h1>
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 mt-5 mx-7">
           <label htmlFor="title" className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">
             タイトル
@@ -281,7 +263,7 @@ export default function PostPhoto() {
                       d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
-                  <p className="lowercase text-sm text-gray-400 group-hover:text-logoColor-light pt-1 tracking-wider">Select a photo</p>
+                  <p className="lowercase text-sm text-gray-400 group-hover:text-logoColor-light pt-1 tracking-wider">アップロード</p>
                 </div>
                 <input type="file" className="hidden" onChange={onChangeImageHandler} />
               </label>
@@ -290,7 +272,10 @@ export default function PostPhoto() {
         </div>
 
         <div className="flex items-center justify-center  md:gap-8 gap-4 pt-5 pb-5 mt-3 mb-3">
-          <button type="submit" className="w-auto bg-logoColor-base hover:bg-red-700 rounded-lg shadow-xl font-medium text-white px-4 py-2">
+          <button
+            type="submit"
+            className="w-auto bg-logoColor-base hover:bg-red-700 rounded-lg shadow-xl font-medium text-white px-4 py-2 hover:opacity-70"
+          >
             投稿
           </button>
         </div>
