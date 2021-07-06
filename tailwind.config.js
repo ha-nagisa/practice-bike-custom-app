@@ -22,6 +22,7 @@ module.exports = {
         black: {
           light: '#262626',
           faded: '#00000059',
+          base: '#000000',
         },
         gray: {
           base: '#616161',
@@ -40,6 +41,9 @@ module.exports = {
       },
       width: {
         '19/20': '95%',
+      },
+      height: {
+        '50vh': '50vh',
       },
       minWidth: {
         900: '900px',

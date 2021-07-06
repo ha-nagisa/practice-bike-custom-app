@@ -24,9 +24,9 @@ export default function Post({ content }) {
   return (
     <div className="col-span-2  mb-12">
       <div className="rounded border bg-white border-gray-primary">
-        <Header username={content.username} iconImageSrc={postUser?.bikeImageUrl} />
+        <Header content={content} postUser={postUser} />
         <Image src={content.imageSrc} title={content.title} />
-        <Footer description={content.description} username={content.username} title={content.title} />
+        <Footer description={content.description} username={content.username} title={content.title} category={content.category} />
         <Actions docId={content.docId} totalLikes={content.likes.length} likedPhoto={content.userLikedPhoto} handleFocus={handleFocus} />
         <Comments docId={content.docId} comments={content.comments} posted={content.dateCreated} commentInput={commentInput} />
       </div>
@@ -40,6 +40,7 @@ Post.propTypes = {
     username: PropTypes.string.isRequired,
     imageSrc: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
     docId: PropTypes.string.isRequired,
     userLikedPhoto: PropTypes.bool.isRequired,
     likes: PropTypes.array.isRequired,
