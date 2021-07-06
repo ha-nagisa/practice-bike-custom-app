@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import FirebaseContext from '../../context/firebase';
 import UserContext from '../../context/user';
 import useUser from '../../hooks/use-user';
+import LoggedInUserContext from '../../context/logged-in-user';
 
 export default function Actions({ docId, totalLikes, likedPhoto, handleFocus }) {
   const {
     user: { uid: userId },
   } = useContext(UserContext);
+  const { user: loggedInUser, setActiveUser } = useContext(LoggedInUserContext);
   const { user: userSore } = useUser(userId);
   const [toggleLiked, setToggleLiked] = useState(likedPhoto);
   const [likes, setLikes] = useState(totalLikes);
@@ -33,6 +35,11 @@ export default function Actions({ docId, totalLikes, likedPhoto, handleFocus }) 
       .update({
         likes: toggleLiked ? FieldValue.arrayRemove(docId) : FieldValue.arrayUnion(docId),
       });
+
+    setActiveUser({
+      ...loggedInUser,
+      likes: toggleLiked ? loggedInUser.likes.filter((likeId) => likeId !== docId) : [...loggedInUser.likes, docId],
+    });
   };
 
   return (

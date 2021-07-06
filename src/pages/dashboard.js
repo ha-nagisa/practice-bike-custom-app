@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Header from '../components/header';
@@ -11,17 +11,24 @@ import LoggedInUserContext from '../context/logged-in-user';
 import PostIcon from '../components/postIcon';
 import TimelineAll from '../components/timeLineAll';
 import TimelineFavorite from '../components/timeLineFavorite';
+import ModalContext from '../context/modal';
+import PostEditModal from '../components/postEditModal';
+import PostDetailModal from '../components/postDetailModal';
+import PostErrorModal from '../components/postErrorModal';
 
 export default function Dashboard({ user: loggedInUser }) {
   const [postConditional, setPostConditional] = useState('all');
   const { user, setActiveUser } = useUser(loggedInUser.uid);
+  const { modalInfo, setModalInfo, isModalOpen, setIsModalOpen } = useContext(ModalContext);
+  const isPostUser = modalInfo?.username === user?.username;
+
   useEffect(() => {
-    document.title = 'Instagram';
+    document.title = 'Bun Bun Bike';
   }, []);
 
   return (
     <LoggedInUserContext.Provider value={{ user, setActiveUser }}>
-      <div className="bg-gray-background relative">
+      <div className={`bg-gray-background ${isModalOpen ? 'fixed w-full h-full left-0' : 'relative'}`}>
         <Header />
         <div className="grid grid-cols-5 gap-4 justify-between mx-auto max-w-screen-xl  px-5">
           <div className="container col-span-4 grid-cols-4 grid gap-2">
@@ -71,6 +78,17 @@ export default function Dashboard({ user: loggedInUser }) {
           <Sidebar />
         </div>
         <PostIcon />
+        {isModalOpen ? (
+          modalInfo ? (
+            isPostUser ? (
+              <PostEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+            ) : (
+              <PostDetailModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+            )
+          ) : (
+            <PostErrorModal />
+          )
+        ) : null}
       </div>
     </LoggedInUserContext.Provider>
   );
