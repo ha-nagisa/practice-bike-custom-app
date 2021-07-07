@@ -20,7 +20,7 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState('');
-  const isInvalid = password === '' || emailAddress === '';
+  const isInvalid = password === '' || emailAddress === '' || username === '' || bikeImage === '' || maker === '' || carModel === '';
 
   const onChangeImageHandler = (e) => {
     if (e.target.files[0]) {
@@ -91,7 +91,7 @@ export default function SignUp() {
   };
 
   useEffect(() => {
-    document.title = 'Sign Up - Instagram';
+    document.title = 'Sign Up - Bun Bun Bike';
   }, []);
 
   return (

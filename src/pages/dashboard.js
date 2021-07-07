@@ -28,7 +28,7 @@ export default function Dashboard({ user: loggedInUser }) {
 
   return (
     <LoggedInUserContext.Provider value={{ user, setActiveUser }}>
-      <div className={`bg-gray-background ${isModalOpen ? 'fixed w-full h-full left-0' : 'relative'}`}>
+      <div className={`bg-gray-background ${isModalOpen ? 'fixed w-full h-full top-0 left-0' : 'relative'}`}>
         <Header />
         <div className="grid grid-cols-5 gap-4 justify-between mx-auto max-w-screen-xl  px-5">
           <div className="container col-span-4 grid-cols-4 grid gap-2">

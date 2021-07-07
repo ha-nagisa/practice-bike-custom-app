@@ -31,7 +31,11 @@ export default function SuggestedProfile({ profileDocId, username, profileId, us
           <p className="font-bold text-sm">{username}</p>
         </Link>
       </div>
-      <button className="text-xs font-bold text-blue-medium" type="button" onClick={handleFollowUser}>
+      <button
+        className="rounded text-xs font-bold bg-white text-logoColor-base px-2 py-1 border border-logoColor-base hover:bg-logoColor-base hover:text-white"
+        type="button"
+        onClick={handleFollowUser}
+      >
         Follow
       </button>
     </div>

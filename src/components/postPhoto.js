@@ -17,9 +17,11 @@ export default function PostPhoto() {
   const [description, setDiscription] = useState('');
   const [category, setCategory] = useState('');
   const [workHours, setWorkHours] = useState('');
-  const [workMoney, setWorkMoney] = useState('記入なし');
+  const [workMoney, setWorkMoney] = useState(null);
   const [workImage, setWorkImage] = useState(null);
   const [previewWorkImageSrc, setPreviewWorkImageSrc] = useState('');
+
+  const isInvalid = title === '' || description === '' || category === '' || workHours === '' || workMoney === '' || workImage === null;
 
   const onChangeImageHandler = (e) => {
     if (e.target.files[0]) {
@@ -52,12 +54,13 @@ export default function PostPhoto() {
         userId: user.userId,
         description,
         imageSrc: workImageUrl,
-        Maker: 'HONDA',
-        carModel: 'GB350',
+        Maker: user.carModel,
+        carModel: user.maker,
         likes: [],
         comments: [],
         category,
         workMoney,
+        workHours,
         dateCreated: Date.now(),
       });
       history.push(ROUTES.DASHBOARD);
@@ -247,7 +250,7 @@ export default function PostPhoto() {
                 <img src={previewWorkImageSrc} alt="" />
               </div>
             ) : (
-              <label className="flex flex-col border-4 border-dashed w-full h-44 hover:bg-gray-100 hover:border-logoColor-light group cursor-pointer">
+              <label className="flex flex-col border-4 border-dashed w-full h-44 hover:border-logoColor-light group cursor-pointer">
                 <div className="flex flex-col items-center justify-center h-full">
                   <svg
                     className="w-10 h-10 text-gray-500 group-hover:text-logoColor-light"
@@ -274,7 +277,10 @@ export default function PostPhoto() {
         <div className="flex items-center justify-center  md:gap-8 gap-4 pt-5 pb-5 mt-3 mb-3">
           <button
             type="submit"
-            className="w-auto bg-logoColor-base hover:bg-red-700 rounded-lg shadow-xl font-medium text-white px-4 py-2 hover:opacity-70"
+            className={`w-auto bg-logoColor-base  rounded-lg shadow-xl font-medium text-white px-4 py-2 hover:opacity-70 ${
+              isInvalid && 'opacity-50'
+            }`}
+            disabled={isInvalid}
           >
             投稿
           </button>

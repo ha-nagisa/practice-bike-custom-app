@@ -655,7 +655,7 @@ select {
 
 .bg-black-base {
   --tw-bg-opacity: 1;
-  background-color: rgba(0, 0, 0, var(--tw-bg-opacity));
+  background-color: rgba(51, 51, 51, var(--tw-bg-opacity));
 }
 
 .bg-white {
@@ -678,9 +678,24 @@ select {
   background-color: rgba(255, 152, 0, var(--tw-bg-opacity));
 }
 
+.hover\:bg-gray-100:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgba(243, 244, 246, var(--tw-bg-opacity));
+}
+
+.hover\:bg-logoColor-base:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgba(255, 152, 0, var(--tw-bg-opacity));
+}
+
 .border-black-light {
   --tw-border-opacity: 1;
   border-color: rgba(38, 38, 38, var(--tw-border-opacity));
+}
+
+.border-black-base {
+  --tw-border-opacity: 1;
+  border-color: rgba(51, 51, 51, var(--tw-border-opacity));
 }
 
 .border-gray-400 {
@@ -879,6 +894,10 @@ select {
   height: 50vh;
 }
 
+.h-80vh {
+  height: 80vh;
+}
+
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
@@ -1030,6 +1049,10 @@ select {
   opacity: 0.7;
 }
 
+.hover\:opacity-80:hover {
+  opacity: 0.8;
+}
+
 .outline-none {
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -1038,6 +1061,18 @@ select {
 .focus\:outline-none:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-visible {
+  overflow: visible;
+}
+
+.p-2 {
+  padding: 0.5rem;
 }
 
 .p-4 {
@@ -1163,6 +1198,10 @@ select {
   top: 0px;
 }
 
+.right-0 {
+  right: 0px;
+}
+
 .bottom-0 {
   bottom: 0px;
 }
@@ -1239,6 +1278,11 @@ select {
   color: rgba(38, 38, 38, var(--tw-text-opacity));
 }
 
+.text-black-base {
+  --tw-text-opacity: 1;
+  color: rgba(51, 51, 51, var(--tw-text-opacity));
+}
+
 .text-white {
   --tw-text-opacity: 1;
   color: rgba(255, 255, 255, var(--tw-text-opacity));
@@ -1287,6 +1331,11 @@ select {
 .group:hover .group-hover\:text-logoColor-light {
   --tw-text-opacity: 1;
   color: rgba(255, 191, 102, var(--tw-text-opacity));
+}
+
+.hover\:text-white:hover {
+  --tw-text-opacity: 1;
+  color: rgba(255, 255, 255, var(--tw-text-opacity));
 }
 
 .italic {
@@ -1382,6 +1431,10 @@ select {
   z-index: 10;
 }
 
+.z-20 {
+  z-index: 20;
+}
+
 .gap-2 {
   gap: 0.5rem;
 }
@@ -1435,6 +1488,10 @@ select {
   --tw-scale-x: 1;
   --tw-scale-y: 1;
   transform: translateX(var(--tw-translate-x)) translateY(var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.translate-x-1\/2 {
+  --tw-translate-x: 50%;
 }
 
 .-translate-x-1\/2 {
