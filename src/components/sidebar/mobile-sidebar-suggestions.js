@@ -1,24 +1,34 @@
 /* eslint-disable no-nested-ternary */
-import { useContext } from 'react';
-import Skeleton from 'react-loading-skeleton';
-import SuggestedProfile from './suggested-profile';
-import SuggestionsProfilesContext from '../../context/suggestions-profiles';
-import LoggedInUserContext from '../../context/logged-in-user';
 
-export default function Suggestions() {
+import React, { useContext } from 'react';
+import Slider from 'react-slick';
+
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+import Skeleton from 'react-loading-skeleton';
+import LoggedInUserContext from '../../context/logged-in-user';
+import SuggestionsProfilesContext from '../../context/suggestions-profiles';
+import MobileSuggestedProfile from './mobile-suggested-profile';
+
+export default function MobileSidebarSuggestions() {
   const { profiles } = useContext(SuggestionsProfilesContext);
   const { user } = useContext(LoggedInUserContext);
+
+  const settings = {
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 2,
+  };
 
   return !profiles ? (
     <Skeleton count={1} height={150} className="mt-5" />
   ) : profiles.length > 0 ? (
-    <div className="rounded flex flex-col">
-      <div className="text-sm flex items-center align-items justify-between mb-2">
-        <p className="font-bold text-gray-base">あなたにおすすめのユーザー</p>
-      </div>
-      <div className="mt-4 grid gap-5">
+    <div className="mt-4">
+      <Slider {...settings}>
         {profiles.map((profile) => (
-          <SuggestedProfile
+          <MobileSuggestedProfile
             key={profile.docId}
             profileDocId={profile.docId}
             username={profile.username}
@@ -28,7 +38,7 @@ export default function Suggestions() {
             profileImageUrl={profile.bikeImageUrl}
           />
         ))}
-      </div>
+      </Slider>
     </div>
   ) : null;
 }

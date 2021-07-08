@@ -4,6 +4,7 @@ import { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ModalContext from '../../context/modal';
 import UserContext from '../../context/user';
+import { backfaceFixed } from '../../utils/backfaceFixed';
 
 export default function Header({ content, postUser }) {
   const { modalInfo, setModalInfo, isModalOpen, setIsModalOpen } = useContext(ModalContext);
@@ -12,11 +13,13 @@ export default function Header({ content, postUser }) {
 
   const openPostEditModal = () => {
     setModalInfo(content);
+    backfaceFixed(true);
     setIsModalOpen(!isModalOpen);
   };
 
   const openPostDetailModal = () => {
     setModalInfo(content);
+    backfaceFixed(true);
     setIsModalOpen(!isModalOpen);
   };
 
