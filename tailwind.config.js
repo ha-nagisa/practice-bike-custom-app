@@ -22,7 +22,7 @@ module.exports = {
         black: {
           light: '#262626',
           faded: '#00000059',
-          base: '#000000',
+          base: '#333333',
         },
         gray: {
           base: '#616161',
@@ -44,6 +44,7 @@ module.exports = {
       },
       height: {
         '50vh': '50vh',
+        '80vh': '80vh',
       },
       minWidth: {
         900: '900px',
@@ -51,7 +52,6 @@ module.exports = {
     },
   },
   variants: {
-    backgroundColor: ['active'],
     extend: {
       display: ['group-hover'],
     },

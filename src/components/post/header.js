@@ -11,17 +11,12 @@ export default function Header({ content, postUser }) {
   const isPostUser = loggedInUser.displayName === content.username;
 
   const openPostEditModal = () => {
-    const getModalInfo = async () => {
-      await setModalInfo(content);
-    };
-    getModalInfo();
-    console.log(modalInfo);
+    setModalInfo(content);
     setIsModalOpen(!isModalOpen);
   };
 
   const openPostDetailModal = () => {
     setModalInfo(content);
-    console.log(modalInfo);
     setIsModalOpen(!isModalOpen);
   };
 
