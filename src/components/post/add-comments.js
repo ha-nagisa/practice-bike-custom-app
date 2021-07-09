@@ -35,7 +35,7 @@ export default function AddComment({ docId, comments, setComments, commentInput 
         <input
           aria-label="Add a comment"
           autoComplete="off"
-          className="text-sm text-gray-base w-full mr-3 py-5 px-4"
+          className="text-sm text-gray-base w-full mr-3 sm:py-5 sm:px-4 py-4 px-3"
           type="text"
           name="add-comment"
           placeholder="Add a comment..."

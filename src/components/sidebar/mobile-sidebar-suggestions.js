@@ -18,8 +18,24 @@ export default function MobileSidebarSuggestions() {
   const settings = {
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: 4.5,
     slidesToScroll: 2,
+    responsive: [
+      {
+        breakpoint: 780,
+        settings: {
+          slidesToShow: 3.5,
+          slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 540,
+        settings: {
+          slidesToShow: 2.5,
+          slidesToScroll: 2,
+        },
+      },
+    ],
   };
 
   return !profiles ? (

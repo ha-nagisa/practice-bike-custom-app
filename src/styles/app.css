@@ -755,10 +755,6 @@ select {
   border-width: 1px;
 }
 
-.border-b-2 {
-  border-bottom-width: 2px;
-}
-
 .border-t {
   border-top-width: 1px;
 }
@@ -1143,6 +1139,11 @@ select {
   padding-right: 0.75rem;
 }
 
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
@@ -1212,6 +1213,10 @@ select {
   padding-bottom: 1.25rem;
 }
 
+.pt-8 {
+  padding-top: 2rem;
+}
+
 .fixed {
   position: fixed;
 }
@@ -1267,6 +1272,11 @@ select {
 
 .shadow-xl {
   --tw-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.shadow-borderBottom {
+  --tw-shadow: 0 4px 0px 0px rgba(0, 0, 0, 0.01);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
@@ -1627,6 +1637,16 @@ select {
     padding-bottom: 0px;
   }
 
+  .sm\:px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .sm\:py-5 {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+  }
+
   .sm\:pt-harf {
     padding-top: 50%;
   }
@@ -1657,6 +1677,10 @@ select {
 
   .sm\:w-9\/12 {
     width: 75%;
+  }
+
+  .sm\:col-span-2 {
+    grid-column: span 2 / span 2;
   }
 
   .sm\:transform {

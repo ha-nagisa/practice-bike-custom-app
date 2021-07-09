@@ -8,7 +8,6 @@ export default function usePhotos(user) {
 
   useEffect(() => {
     async function getTimelinePhotosFavorite() {
-      // does the user actually follow people?
       if (user?.likes?.length > 0) {
         const favoritedPhotos = await getPhotosFavorite(user.userId, user.likes);
 
@@ -27,6 +26,8 @@ export default function usePhotos(user) {
         }
         favoritedPhotos.sort((a, b) => b.dateCreated - a.dateCreated);
         setPhotos(favoritedPhotos);
+      } else {
+        setPhotos([]);
       }
     }
 
