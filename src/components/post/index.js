@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import Skeleton from 'react-loading-skeleton';
 
 import Header from './header';
 import Image from './image';
@@ -22,7 +23,7 @@ export default function Post({ content }) {
   const handleFocus = () => commentInput.current.focus();
 
   return (
-    <div className="col-span-2  mb-12">
+    <div className="col-span-4 sm:col-span-2  sm;mb-12 mb-8">
       <div className="rounded border bg-white border-gray-primary">
         <Header content={content} postUser={postUser} />
         <Image src={content.imageSrc} title={content.title} />

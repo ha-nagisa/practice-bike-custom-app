@@ -48,13 +48,12 @@ export default function Dashboard({ user: loggedInUser }) {
           <Header />
           <div className="grid lg:grid-cols-5 grid-cols-4 gap-4 justify-between mx-auto max-w-screen-xl  px-5">
             <div className="col-span-4 grid-cols-4 grid gap-2">
-              <MobileSidebar />
               <div className="col-span-4 flex items-center mb-3">
                 <div className="w-1/3">
                   <button
                     onClick={() => setPostConditional('all')}
-                    className={`text-center w-full border-b-2 pb-2 focus:outline-none ${
-                      postConditional === 'all' ? 'text-logoColor-base border-logoColor-base' : 'text-gray-400 border-gray-400'
+                    className={`text-center w-full border-b pb-2 focus:outline-none  shadow-borderBottom ${
+                      postConditional === 'all' ? 'text-logoColor-base border-logoColor-base' : 'text-gray-400'
                     }`}
                     type="button"
                   >
@@ -64,8 +63,8 @@ export default function Dashboard({ user: loggedInUser }) {
                 <div className="w-1/3">
                   <button
                     onClick={() => setPostConditional('follow')}
-                    className={`text-center w-full border-b-2 pb-2 focus:outline-none ${
-                      postConditional === 'follow' ? 'text-logoColor-base border-logoColor-base' : 'text-gray-400 border-gray-400'
+                    className={`text-center w-full border-b pb-2 focus:outline-none shadow-borderBottom ${
+                      postConditional === 'follow' ? 'text-logoColor-base border-logoColor-base' : 'text-gray-400'
                     }`}
                     type="button"
                   >
@@ -75,8 +74,8 @@ export default function Dashboard({ user: loggedInUser }) {
                 <div className="w-1/3">
                   <button
                     onClick={() => setPostConditional('favorite')}
-                    className={`text-center w-full border-b-2 pb-2 focus:outline-none ${
-                      postConditional === 'favorite' ? 'text-logoColor-base border-logoColor-base' : 'text-gray-400 border-gray-400'
+                    className={`text-center w-full border-b pb-2 focus:outline-none shadow-borderBottom ${
+                      postConditional === 'favorite' ? 'text-logoColor-base border-logoColor-base' : 'text-gray-400'
                     }`}
                     type="button"
                   >
@@ -84,6 +83,7 @@ export default function Dashboard({ user: loggedInUser }) {
                   </button>
                 </div>
               </div>
+              <MobileSidebar />
               {postConditional === 'all' ? (
                 <TimelineAll />
               ) : postConditional === 'follow' ? (

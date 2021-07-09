@@ -60,7 +60,7 @@ export default function Header() {
                     <Link to={`/p/${user?.username}`}>
                       <img
                         className="object-cover w-8 h-8 rounded-full flex"
-                        src={user.bikeImageUrl}
+                        src={!user.bikeImageUrl ? `/images/avatars/default.png` : user.bikeImageUrl}
                         alt={`${user?.username} profile`}
                         onError={(e) => {
                           e.target.src = DEFAULT_IMAGE_PATH;

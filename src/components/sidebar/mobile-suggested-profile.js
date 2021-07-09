@@ -6,7 +6,9 @@ import LoggedInUserContext from '../../context/logged-in-user';
 
 export default function MobileSuggestedProfile({ profileDocId, username, profileId, userId, loggedInUserDocId, profileImageUrl }) {
   const [followed, setFollowed] = useState(false);
-  const { setActiveUser } = useContext(LoggedInUserContext);
+  const { user: activeUser, setActiveUser } = useContext(LoggedInUserContext);
+  console.log(activeUser);
+  const isFollowing = activeUser.following.some((userId) => userId === profileId);
 
   async function handleFollowUser() {
     setFollowed(true);
@@ -15,8 +17,16 @@ export default function MobileSuggestedProfile({ profileDocId, username, profile
     const [user] = await getUserByUserId(userId);
     setActiveUser(user);
   }
-  return !followed ? (
-    <div className="flex items-center border border-gray-400 rounded p-2 mr-2">
+  async function handleUnFollowUser() {
+    setFollowed(false);
+    await updateLoggedInUserFollowing(loggedInUserDocId, profileId, true);
+    await updateFollowedUserFollowers(profileDocId, userId, true);
+    const [user] = await getUserByUserId(userId);
+    setActiveUser(user);
+  }
+
+  return (
+    <div className="flex items-center justify-center border border-gray-400 rounded p-2 mr-2">
       <div className="mr-2">
         <Link className="w-auto break-all" to={`/p/${username}`}>
           <img
@@ -33,16 +43,26 @@ export default function MobileSuggestedProfile({ profileDocId, username, profile
         <Link className="w-auto break-all" to={`/p/${username}`}>
           <p className="font-bold text-sm break-all text-center">{username}</p>
         </Link>
-        <button
-          className="rounded text-xs font-bold bg-white text-logoColor-base px-2 py-1 border border-logoColor-base hover:bg-logoColor-base hover:text-white"
-          type="button"
-          onClick={handleFollowUser}
-        >
-          Follow
-        </button>
+        {!isFollowing ? (
+          <button
+            className="rounded text-xs font-bold bg-white text-logoColor-base px-2 py-1 border border-logoColor-base hover:bg-logoColor-base hover:text-white"
+            type="button"
+            onClick={handleFollowUser}
+          >
+            Follow
+          </button>
+        ) : (
+          <button
+            className="rounded text-xs font-bold bg-white text-logoColor-base px-2 py-1 border border-logoColor-base hover:bg-logoColor-base hover:text-white"
+            type="button"
+            onClick={handleUnFollowUser}
+          >
+            Unfollow
+          </button>
+        )}
       </div>
     </div>
-  ) : null;
+  );
 }
 
 MobileSuggestedProfile.propTypes = {

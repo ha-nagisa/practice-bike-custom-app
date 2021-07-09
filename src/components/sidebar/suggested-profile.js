@@ -6,7 +6,8 @@ import LoggedInUserContext from '../../context/logged-in-user';
 
 export default function SuggestedProfile({ profileDocId, username, profileId, userId, loggedInUserDocId, profileImageUrl }) {
   const [followed, setFollowed] = useState(false);
-  const { setActiveUser } = useContext(LoggedInUserContext);
+  const { user: activeUser, setActiveUser } = useContext(LoggedInUserContext);
+  const isFollowing = activeUser.following.some((userId) => userId === profileId);
 
   async function handleFollowUser() {
     setFollowed(true);
@@ -16,7 +17,15 @@ export default function SuggestedProfile({ profileDocId, username, profileId, us
     setActiveUser(user);
   }
 
-  return !followed ? (
+  async function handleUnFollowUser() {
+    setFollowed(false);
+    await updateLoggedInUserFollowing(loggedInUserDocId, profileId, true);
+    await updateFollowedUserFollowers(profileDocId, userId, true);
+    const [user] = await getUserByUserId(userId);
+    setActiveUser(user);
+  }
+
+  return (
     <div className="flex flex-row items-center align-items justify-between">
       <div className="flex items-center justify-between">
         <img
@@ -31,15 +40,25 @@ export default function SuggestedProfile({ profileDocId, username, profileId, us
           <p className="font-bold text-sm break-all">{username}</p>
         </Link>
       </div>
-      <button
-        className="rounded text-xs font-bold bg-white text-logoColor-base px-2 py-1 border border-logoColor-base hover:bg-logoColor-base hover:text-white"
-        type="button"
-        onClick={handleFollowUser}
-      >
-        Follow
-      </button>
+      {!isFollowing ? (
+        <button
+          className="rounded text-xs font-bold bg-white text-logoColor-base px-2 py-1 border border-logoColor-base hover:bg-logoColor-base hover:text-white"
+          type="button"
+          onClick={handleFollowUser}
+        >
+          Follow
+        </button>
+      ) : (
+        <button
+          className="rounded text-xs font-bold bg-white text-logoColor-base px-2 py-1 border border-logoColor-base hover:bg-logoColor-base hover:text-white"
+          type="button"
+          onClick={handleUnFollowUser}
+        >
+          Unfollow
+        </button>
+      )}
     </div>
-  ) : null;
+  );
 }
 
 SuggestedProfile.propTypes = {

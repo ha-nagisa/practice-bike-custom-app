@@ -11,10 +11,10 @@ export default function TimelineAll() {
     <>
       {!photos ? (
         <>
-          <div className="col-span-2">
+          <div className="sm:col-span-2 col-span-4">
             <Skeleton count={4} height={400} className="mb-5" />
           </div>
-          <div className="col-span-2">
+          <div className="sm:col-span-2 col-span-4">
             <Skeleton count={4} height={400} className="mb-5" />
           </div>
         </>
