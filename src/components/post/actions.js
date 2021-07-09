@@ -44,7 +44,7 @@ export default function Actions({ docId, totalLikes, likedPhoto, handleFocus }) 
 
   return (
     <>
-      <div className="flex justify-between p-4">
+      <div className="flex justify-between">
         <div className="flex">
           <svg
             onClick={handleToggleLiked}
