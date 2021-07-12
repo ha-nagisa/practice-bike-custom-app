@@ -6,11 +6,13 @@ import FirebaseContext from '../context/firebase';
 import UserContext from '../context/user';
 import useUser from '../hooks/use-user';
 import * as ROUTES from '../constants/routes';
+import UserPhotosContext from '../context/userPhotos';
 
 export default function PostPhoto() {
   const history = useHistory();
   const { user: loggedInUser } = useContext(UserContext);
   const { user } = useUser(loggedInUser?.uid);
+  const { loggedInUserPhotos, setLoggedInUserPhotos } = useContext(UserPhotosContext);
   const { firebase } = useContext(FirebaseContext);
 
   const [title, setTitle] = useState('');
@@ -63,6 +65,8 @@ export default function PostPhoto() {
         workHours,
         dateCreated: Date.now(),
       });
+
+      setLoggedInUserPhotos((photos) => [...photos]);
       history.push(ROUTES.DASHBOARD);
     } catch (error) {
       alert(error.message);

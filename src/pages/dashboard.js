@@ -21,9 +21,9 @@ import SuggestionsProfilesContext from '../context/suggestions-profiles';
 
 export default function Dashboard({ user: loggedInUser }) {
   const [postConditional, setPostConditional] = useState('all');
-  const { user, setActiveUser } = useUser(loggedInUser.uid);
+  const { user: activeUser, setActiveUser } = useContext(LoggedInUserContext);
   const { modalInfo, isModalOpen, setIsModalOpen } = useContext(ModalContext);
-  const isPostUser = modalInfo?.username === user?.username;
+  const isPostUser = modalInfo?.username === activeUser?.username;
   const [profiles, setProfiles] = useState(null);
 
   useEffect(() => {
@@ -32,83 +32,81 @@ export default function Dashboard({ user: loggedInUser }) {
 
   useEffect(() => {
     async function suggestedProfiles() {
-      const response = await getSuggestedProfiles(user.userId, user.following, user.maker);
+      const response = await getSuggestedProfiles(activeUser.userId, activeUser.following, activeUser.maker);
       setProfiles(response);
     }
 
-    if (user?.userId) {
+    if (activeUser?.userId) {
       suggestedProfiles();
     }
-  }, [user?.userId]);
+  }, [activeUser?.userId]);
 
   return (
-    <LoggedInUserContext.Provider value={{ user, setActiveUser }}>
-      <SuggestionsProfilesContext.Provider value={{ profiles, setProfiles }}>
-        <div className="bg-gray-background  relative">
-          <Header />
-          <div className="grid lg:grid-cols-5 grid-cols-4 gap-4 justify-between mx-auto max-w-screen-xl  px-5">
-            <div className="col-span-4 grid-cols-4 grid gap-2">
-              <div className="col-span-4 flex items-center mb-3">
-                <div className="w-1/3">
-                  <button
-                    onClick={() => setPostConditional('all')}
-                    className={`text-center w-full border-b pb-2 focus:outline-none  shadow-borderBottom ${
-                      postConditional === 'all' ? 'text-logoColor-base border-logoColor-base' : 'text-gray-400'
-                    }`}
-                    type="button"
-                  >
-                    みんなの投稿
-                  </button>
-                </div>
-                <div className="w-1/3">
-                  <button
-                    onClick={() => setPostConditional('follow')}
-                    className={`text-center w-full border-b pb-2 focus:outline-none shadow-borderBottom ${
-                      postConditional === 'follow' ? 'text-logoColor-base border-logoColor-base' : 'text-gray-400'
-                    }`}
-                    type="button"
-                  >
-                    フォロー中
-                  </button>
-                </div>
-                <div className="w-1/3">
-                  <button
-                    onClick={() => setPostConditional('favorite')}
-                    className={`text-center w-full border-b pb-2 focus:outline-none shadow-borderBottom ${
-                      postConditional === 'favorite' ? 'text-logoColor-base border-logoColor-base' : 'text-gray-400'
-                    }`}
-                    type="button"
-                  >
-                    お気に入り
-                  </button>
-                </div>
+    <SuggestionsProfilesContext.Provider value={{ profiles, setProfiles }}>
+      <div className="bg-gray-background  relative">
+        <Header />
+        <div className="grid lg:grid-cols-5 grid-cols-4 gap-4 justify-between mx-auto max-w-screen-xl  px-5">
+          <div className="col-span-4 grid-cols-4 grid gap-2">
+            <div className="col-span-4 flex items-center mb-3">
+              <div className="w-1/3">
+                <button
+                  onClick={() => setPostConditional('all')}
+                  className={`text-center w-full border-b pb-2 focus:outline-none  shadow-borderBottom ${
+                    postConditional === 'all' ? 'text-logoColor-base border-logoColor-base' : 'text-gray-400'
+                  }`}
+                  type="button"
+                >
+                  みんなの投稿
+                </button>
               </div>
-              <MobileSidebar />
-              {postConditional === 'all' ? (
-                <TimelineAll />
-              ) : postConditional === 'follow' ? (
-                <Timeline />
-              ) : postConditional === 'favorite' ? (
-                <TimelineFavorite />
-              ) : null}
+              <div className="w-1/3">
+                <button
+                  onClick={() => setPostConditional('follow')}
+                  className={`text-center w-full border-b pb-2 focus:outline-none shadow-borderBottom ${
+                    postConditional === 'follow' ? 'text-logoColor-base border-logoColor-base' : 'text-gray-400'
+                  }`}
+                  type="button"
+                >
+                  フォロー中
+                </button>
+              </div>
+              <div className="w-1/3">
+                <button
+                  onClick={() => setPostConditional('favorite')}
+                  className={`text-center w-full border-b pb-2 focus:outline-none shadow-borderBottom ${
+                    postConditional === 'favorite' ? 'text-logoColor-base border-logoColor-base' : 'text-gray-400'
+                  }`}
+                  type="button"
+                >
+                  お気に入り
+                </button>
+              </div>
             </div>
-            <Sidebar />
+            <MobileSidebar />
+            {postConditional === 'all' ? (
+              <TimelineAll />
+            ) : postConditional === 'follow' ? (
+              <Timeline />
+            ) : postConditional === 'favorite' ? (
+              <TimelineFavorite />
+            ) : null}
           </div>
-          <PostIcon />
-          {isModalOpen ? (
-            modalInfo ? (
-              isPostUser ? (
-                <PostEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-              ) : (
-                <PostDetailModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-              )
-            ) : (
-              <PostErrorModal />
-            )
-          ) : null}
+          <Sidebar />
         </div>
-      </SuggestionsProfilesContext.Provider>
-    </LoggedInUserContext.Provider>
+        <PostIcon />
+        {isModalOpen ? (
+          modalInfo ? (
+            isPostUser ? (
+              <PostEditModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+            ) : (
+              <PostDetailModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+            )
+          ) : (
+            <PostErrorModal />
+          )
+        ) : null}
+      </div>
+    </SuggestionsProfilesContext.Provider>
   );
 }
 

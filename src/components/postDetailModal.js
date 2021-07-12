@@ -12,7 +12,7 @@ export default function PostDetailModal({ isModalOpen, setIsModalOpen }) {
   };
 
   return (
-    <div className="fixed z-10 top-0 left-0 w-full h-full">
+    <div className="fixed z-30 top-0 left-0 w-full h-full">
       <button type="button" onClick={() => closeModal()} className="bg-black-base opacity-70 cursor-pointer h-full w-full" />
       <div className="bg-white absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 h-80vh w-3/5 z-10 rounded max-h-600px min-w-300px max-w-540px">
         <div className="bg-white overflow-auto w-full h-full rounded">

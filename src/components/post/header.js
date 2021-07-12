@@ -6,7 +6,7 @@ import ModalContext from '../../context/modal';
 import UserContext from '../../context/user';
 import { backfaceFixed } from '../../utils/backfaceFixed';
 
-export default function Header({ content, postUser }) {
+export default function Header({ content, postUser, isProfilePage }) {
   const { modalInfo, setModalInfo, isModalOpen, setIsModalOpen } = useContext(ModalContext);
   const { user: loggedInUser } = useContext(UserContext);
   const isPostUser = loggedInUser.displayName === content.username;
@@ -26,14 +26,16 @@ export default function Header({ content, postUser }) {
   return (
     <div className="flex border-b border-gray-primary h-4 p-4 py-8">
       <div className="flex items-center justify-between w-full">
-        <Link to={`/p/${content.username}`} className="flex items-center">
-          <img
-            className="rounded-full h-8 w-8 flex mr-3"
-            src={!postUser.bikeImageUrl ? `/images/avatars/default.png` : postUser.bikeImageUrl}
-            alt={`${content.username} profile picture`}
-          />
-          <p className="font-bold">{content.username}</p>
-        </Link>
+        {isProfilePage ? null : (
+          <Link to={`/p/${content.username}`} className="flex items-center">
+            <img
+              className="rounded-full h-8 w-8 flex mr-3"
+              src={!postUser.bikeImageUrl ? `/images/avatars/default.png` : postUser.bikeImageUrl}
+              alt={`${content.username} profile picture`}
+            />
+            <p className="font-bold">{content.username}</p>
+          </Link>
+        )}
         {isPostUser ? (
           <button
             className="flex items-center text-logoColor-base  outline-none rounded text-sm px-2 py-1 border border-gray-primary hover:opacity-70"
@@ -74,4 +76,5 @@ Header.propTypes = {
     dateCreated: PropTypes.number.isRequired,
   }),
   postUser: PropTypes.object.isRequired,
+  isProfilePage: PropTypes.bool.isRequired,
 };

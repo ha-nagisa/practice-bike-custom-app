@@ -63,7 +63,7 @@ export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
         workHours,
       });
 
-      if (loggedInUserPhotos) {
+      if (loggedInUserPhotos && loggedInUserPhotos.length > 0) {
         const copyLoggedInUserPhotos = [...loggedInUserPhotos];
         const updatedLoggedInUserPhotos = copyLoggedInUserPhotos.map((userPhoto) => {
           if (userPhoto.docId === modalInfo.docId) {
@@ -93,7 +93,7 @@ export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
 
   return (
     <>
-      <div className="fixed z-10 top-0 left-0 w-full h-full">
+      <div className="fixed z-30 top-0 left-0 w-full h-full">
         <button type="button" onClick={() => closeModal()} className="bg-black-base opacity-70 cursor-pointer h-full w-full" />
         <div className="bg-white absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 h-80vh w-4/5 z-10 rounded max-w-screen-lg min-w-300px">
           <div className="bg-white flex justify-center overflow-auto w-full h-full rounded">

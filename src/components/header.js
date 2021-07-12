@@ -19,7 +19,7 @@ export default function Header() {
           <div className="text-gray-700 text-center flex items-center align-items cursor-pointer">
             <h1 className="flex justify-center w-full">
               <Link to={ROUTES.DASHBOARD} aria-label="Instagram logo">
-                <img src="/images/smLoginLogo.png" alt="bun bun bike" width="200px" className="mt-2" />
+                <img src="/images/smLoginLogo.png" alt="bun bun bike" width="200px" className="" />
               </Link>
             </h1>
           </div>

@@ -4,7 +4,7 @@ import { getPhotosFavorite } from '../services/firebase';
 
 export default function usePhotos(user) {
   const [photos, setPhotos] = useState(null);
-  const { loggedInUserPhotos, setLoggedInUserPhotos } = useContext(UserPhotosContext);
+  const { loggedInUserPhotos } = useContext(UserPhotosContext);
 
   useEffect(() => {
     async function getTimelinePhotosFavorite() {
@@ -32,7 +32,7 @@ export default function usePhotos(user) {
     }
 
     getTimelinePhotosFavorite();
-  }, [user?.userId, loggedInUserPhotos]);
+  }, [user?.userId, loggedInUserPhotos, user?.likes]);
 
   return { photos };
 }
