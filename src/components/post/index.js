@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
 
@@ -10,6 +11,10 @@ import Comments from './comments';
 import { getUserByUsername } from '../../services/firebase';
 
 export default function Post({ content }) {
+  const location = useLocation();
+  const isProfilePage = location.pathname.includes('/p/');
+
+  console.log(location.pathname);
   const [postUser, setPostUser] = useState('');
   useEffect(() => {
     const getUser = async () => {
@@ -23,9 +28,9 @@ export default function Post({ content }) {
   const handleFocus = () => commentInput.current.focus();
 
   return (
-    <div className="col-span-4 sm:col-span-2  sm;mb-12 mb-8">
+    <div className={`${isProfilePage ? 'group' : 'col-span-4 sm:col-span-2'}  sm;mb-12 mb-8`}>
       <div className="rounded border bg-white border-gray-primary">
-        <Header content={content} postUser={postUser} />
+        <Header content={content} postUser={postUser} isProfilePage={isProfilePage} />
         <Image src={content.imageSrc} title={content.title} />
         <Footer description={content.description} username={content.username} title={content.title} category={content.category} />
         <Actions docId={content.docId} totalLikes={content.likes.length} likedPhoto={content.userLikedPhoto} handleFocus={handleFocus} />

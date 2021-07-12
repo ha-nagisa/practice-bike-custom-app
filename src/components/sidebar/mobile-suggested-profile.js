@@ -7,7 +7,6 @@ import LoggedInUserContext from '../../context/logged-in-user';
 export default function MobileSuggestedProfile({ profileDocId, username, profileId, userId, loggedInUserDocId, profileImageUrl }) {
   const [followed, setFollowed] = useState(false);
   const { user: activeUser, setActiveUser } = useContext(LoggedInUserContext);
-  console.log(activeUser);
   const isFollowing = activeUser.following.some((userId) => userId === profileId);
 
   async function handleFollowUser() {

@@ -27,7 +27,7 @@ export default function Login() {
   };
 
   useEffect(() => {
-    document.title = 'Login - Instagram';
+    document.title = 'Login - BUnBun BIKE';
   }, []);
 
   return (

@@ -1,10 +1,15 @@
-import { useReducer, useEffect } from 'react';
+import { useReducer, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Header from './header';
 import Photos from './photos';
 import { getUserPhotosByUserId } from '../../services/firebase';
+import UserContext from '../../context/user';
+import UserPhotosContext from '../../context/userPhotos';
+import LoggedInUserContext from '../../context/logged-in-user';
 
-export default function Profile({ user }) {
+export default function Profile({ user, setIsOpenFollowingModal, setIsOpenFollowedModal }) {
+  const { user: activeUser } = useContext(LoggedInUserContext);
+  const { loggedInUserPhotos, setLoggedInUserPhotos } = useContext(UserPhotosContext);
   const reducer = (state, newState) => ({ ...state, ...newState });
   const initialState = {
     profile: {},
@@ -16,7 +21,12 @@ export default function Profile({ user }) {
 
   useEffect(() => {
     async function getProfileInfoAndPhotos() {
-      const photos = await getUserPhotosByUserId(user.userId);
+      let photos = await getUserPhotosByUserId(user.userId);
+      photos.sort((a, b) => b.dateCreated - a.dateCreated);
+      if (activeUser?.userId === user?.userId) {
+        setLoggedInUserPhotos(photos);
+        photos = !loggedInUserPhotos ? photos : loggedInUserPhotos;
+      }
       dispatch({ profile: user, photosCollection: photos, followerCount: user.followers.length });
     }
     getProfileInfoAndPhotos();
@@ -29,6 +39,8 @@ export default function Profile({ user }) {
         profile={profile}
         followerCount={followerCount}
         setFollowerCount={dispatch}
+        setIsOpenFollowingModal={setIsOpenFollowingModal}
+        setIsOpenFollowedModal={setIsOpenFollowedModal}
       />
       <Photos photos={photosCollection} />
     </>
@@ -37,12 +49,17 @@ export default function Profile({ user }) {
 
 Profile.propTypes = {
   user: PropTypes.shape({
+    docId: PropTypes.string,
     dateCreated: PropTypes.number,
     emailAddress: PropTypes.string,
     followers: PropTypes.array,
     following: PropTypes.array,
+    likes: PropTypes.array,
     carModel: PropTypes.string,
+    maker: PropTypes.string,
     userId: PropTypes.string,
     username: PropTypes.string,
   }),
+  setIsOpenFollowingModal: PropTypes.func.isRequired,
+  setIsOpenFollowedModal: PropTypes.func.isRequired,
 };

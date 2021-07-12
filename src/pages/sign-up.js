@@ -54,14 +54,11 @@ export default function SignUp() {
           url = await firebase.storage().ref('bikes').child(fileName).getDownloadURL();
         }
 
-        // authentication
-        // -> emailAddress & password & username (displayName)
         await createdUserResult.user.updateProfile({
           displayName: username,
           photoURL: url,
         });
 
-        // firebase user collection (create a document)
         await firebase.firestore().collection('users').add({
           userId: createdUserResult.user.uid,
           username: username.toLowerCase(),
@@ -121,7 +118,7 @@ export default function SignUp() {
               <div className="text-center">
                 <img className="inline object-cover w-16 h-16 mr-2 rounded-full" src={previewBikeImageSrc} alt="" />
                 <br />
-                <div className="inline-block">
+                <div className="inline-block hover:opacity-70">
                   <label className="text-sm text-logoColor-littleLight cursor-pointer underline mb-2 inline-block">
                     写真を変更する
                     <input type="file" className="hidden" onChange={onChangeImageHandler} />
@@ -130,7 +127,7 @@ export default function SignUp() {
               </div>
             ) : (
               <div className="text-center">
-                <label className="cursor-pointer mb-2 inline-block">
+                <label className="cursor-pointer mb-2 inline-block hover:opacity-70">
                   <img
                     className="inline object-cover w-16 h-16 mr-2 rounded-full border-2 border-gray-primary"
                     src="/images/avatars/bikeDefault.png"
@@ -358,7 +355,7 @@ export default function SignUp() {
             />
             <input
               aria-label="Enter your email address"
-              type="text"
+              type="email"
               placeholder="メールアドレス"
               className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border-2 border-gray-primary focus:outline-none focus:ring-2 focus:ring-logoColor-light rounded mb-4 focus:border-transparent"
               onChange={({ target }) => setEmailAddress(target.value)}

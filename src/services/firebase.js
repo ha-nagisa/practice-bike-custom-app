@@ -42,8 +42,6 @@ export async function getSuggestedProfiles(userId, following, maker) {
   }));
 
   const gettedProfileIds = profiles.map((user) => user.userId);
-  console.log(profiles);
-  console.log(gettedProfileIds);
 
   if (result.docs.length < 15) {
     let query = firebase.firestore().collection('users');
@@ -192,9 +190,9 @@ export async function getUserPhotosByUserId(userId) {
       if (photo.likes.includes(userId)) {
         userLikedPhoto = true;
       }
-      // photo.userId = 2
+
       const user = await getUserByUserId(photo.userId);
-      // raphael
+
       const { username } = user[0];
       return { username, ...photo, userLikedPhoto };
     })
@@ -228,4 +226,42 @@ export async function toggleFollow(isFollowingProfile, activeUserDocId, profileD
   // 2nd param: raphael's doc id
   // 3rd param: is the user following this profile? e.g. does karl follow raphael? (true/false)
   await updateFollowedUserFollowers(profileDocId, followingUserId, isFollowingProfile);
+}
+
+export async function getProfileFollowingUsers(following) {
+  let users = null;
+
+  if (following.length > 0) {
+    const result = await firebase
+      .firestore()
+      .collection('users')
+      .where('userId', 'in', [...following])
+      .get();
+
+    users = result.docs.map((user) => ({
+      ...user.data(),
+      docId: user.id,
+    }));
+  }
+
+  return users;
+}
+
+export async function getProfileFollowedgUsers(followed) {
+  let users = null;
+
+  if (followed.length > 0) {
+    const result = await firebase
+      .firestore()
+      .collection('users')
+      .where('userId', 'in', [...followed])
+      .get();
+
+    users = result.docs.map((user) => ({
+      ...user.data(),
+      docId: user.id,
+    }));
+  }
+
+  return users;
 }
