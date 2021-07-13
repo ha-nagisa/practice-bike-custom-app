@@ -1,22 +1,25 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/no-onchange */
+/* eslint-disable no-nested-ternary */
 
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { toast, Toaster } from 'react-hot-toast';
 
 import FirebaseContext from '../context/firebase';
 import Header from '../components/header';
 import LoggedInUserContext from '../context/logged-in-user';
 import * as ROUTES from '../constants/routes';
+import ResetPasswordModal from '../components/profile-edit/resetPasswordModal';
+import { backfaceFixed } from '../utils/backfaceFixed';
+import DeleteAccountModal from '../components/profile-edit/DeleteAccountModal';
 
 export default function ProfileEdit() {
   const location = useLocation();
-  console.log(location.pathname);
 
   const history = useHistory();
   const { firebase } = useContext(FirebaseContext);
   const { user: activeUser, setActiveUser } = useContext(LoggedInUserContext);
-  console.log(activeUser);
 
   const [username, setUsername] = useState('');
   const [bikeImage, setBikeImage] = useState('');
@@ -24,10 +27,11 @@ export default function ProfileEdit() {
   const [maker, setMaker] = useState('');
   const [carModel, setCarModel] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isMatchPassword, setIsMatchPassword] = useState(true);
-  const [isPasswordLength, setIsPasswordLength] = useState(true);
+  const [resetEmail, setResetEmail] = useState('');
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [errorText, setErrorText] = useState('');
+  const [isActioning, setIsActioning] = useState(false);
+  const [isDeleteAccountModalOpen, setIsDeleteAccountModalOpen] = useState(false);
 
   useEffect(() => {
     setUsername(activeUser?.username);
@@ -38,20 +42,7 @@ export default function ProfileEdit() {
     setEmailAddress(activeUser?.emailAddress);
   }, [activeUser]);
 
-  const [errorText, setErrorText] = useState('');
-  const isInvalid =
-    !isMatchPassword ||
-    password === '' ||
-    confirmPassword === '' ||
-    emailAddress === '' ||
-    username === '' ||
-    bikeImage === '' ||
-    maker === '' ||
-    carModel === '' ||
-    password.length <= 6 ||
-    confirmPassword.length <= 6;
-
-  console.log(firebase.auth().currentUser);
+  const isInvalid = emailAddress === '' || username === '' || bikeImage === '' || maker === '' || carModel === '' || isActioning;
 
   const onChangeImageHandler = (e) => {
     if (e.target.files[0]) {
@@ -65,93 +56,147 @@ export default function ProfileEdit() {
     }
   };
 
+  const openResetModal = () => {
+    setIsResetModalOpen(true);
+    backfaceFixed(true);
+  };
+
+  const openDeleteAccountModal = () => {
+    setIsDeleteAccountModalOpen(true);
+    backfaceFixed(true);
+  };
+
+  const successResetToast = () =>
+    toast.success(' パスワードのリセットに関する案内メールが送信されました。', {
+      style: {
+        border: '1px solid #ffffff',
+        padding: '16px',
+        color: 'rgb(55, 65, 81)',
+        background: '#ffffff',
+      },
+      iconTheme: {
+        primary: '#ff9800',
+        secondary: '#ffffff',
+      },
+    });
+
+  const successUpdateToast = () =>
+    toast.success('正常にプロフィール情報が更新されました。', {
+      style: {
+        border: '1px solid #ffffff',
+        padding: '16px',
+        color: 'rgb(55, 65, 81)',
+        background: '#ffffff',
+      },
+      iconTheme: {
+        primary: '#ff9800',
+        secondary: '#ffffff',
+      },
+    });
+
   const handleEditProfile = async (event) => {
     event.preventDefault();
-    const isLoggedInUser = location.pathname.includes(activeUser?.username);
+    setIsActioning(true);
+    const isLoggedInUser = location.pathname === `/p/${activeUser?.username}/edit`;
 
     if (isLoggedInUser) {
       try {
-        let url = '';
-        if (bikeImage && activeUser?.bikeImageUrl !== bikeImage) {
-          const S = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-          const N = 16;
-          const randomChar = Array.from(crypto.getRandomValues(new Uint32Array(N)))
-            .map((n) => S[n % S.length])
-            .join('');
-          const fileName = `${randomChar}_${bikeImage.name}`;
-          await firebase.storage().ref(`bikes/${fileName}`).put(bikeImage);
-          url = await firebase.storage().ref('bikes').child(fileName).getDownloadURL();
-
-          firebase.fireStore().collection('users').doc(activeUser?.docId).update({
-            username: username.toLowerCase(),
-            bikeImageUrl: url,
-            carModel,
-            maker,
-            emailAddress: emailAddress.toLowerCase(),
-          });
-
-          firebase
-            .auth()
-            .currentUser.updateProfile({
-              displayName: username.toLowerCase(),
-              photoURL: url,
-            })
-            .catch((error) => {
-              setErrorText(error.message);
-            });
-
-          setActiveUser((prev) => ({
-            ...prev,
-            bikeImageUrl: url,
-            carModel,
-            emailAddress,
-            maker,
-            username,
-          }));
-        } else {
-          firebase.firestore().collection('users').doc(activeUser?.docId).update({
-            username: username.toLowerCase(),
-            carModel,
-            maker,
-            emailAddress: emailAddress.toLowerCase(),
-          });
-
-          firebase
-            .auth()
-            .currentUser.updateProfile({
-              displayName: username.toLowerCase(),
-            })
-            .catch((error) => {
-              setErrorText(error.message);
-            });
-
-          setActiveUser((prev) => ({
-            ...prev,
-            carModel,
-            emailAddress,
-            maker,
-            username,
-          }));
-        }
-
-        firebase
+        await firebase
           .auth()
           .currentUser.updateEmail(emailAddress)
+          .then(() => console.log('成功3'))
           .catch((error) => {
             setErrorText(error.message);
           });
-        firebase
-          .auth()
-          .currentUser.updatePassword(password)
-          .catch((error) => {
-            setErrorText(error.message);
-          });
+
+        if (!errorText) {
+          let url = '';
+          if (bikeImage && activeUser?.bikeImageUrl !== bikeImage) {
+            const S = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            const N = 16;
+            const randomChar = Array.from(crypto.getRandomValues(new Uint32Array(N)))
+              .map((n) => S[n % S.length])
+              .join('');
+            const fileName = `${randomChar}_${bikeImage.name}`;
+            await firebase.storage().ref(`bikes/${fileName}`).put(bikeImage);
+            url = await firebase.storage().ref('bikes').child(fileName).getDownloadURL();
+
+            await firebase
+              .firestore()
+              .collection('users')
+              .doc(activeUser?.docId)
+              .update({
+                username: username.toLowerCase(),
+                bikeImageUrl: url,
+                carModel,
+                maker,
+                emailAddress: emailAddress.toLowerCase(),
+              })
+              .then(() => console.log('成功1'))
+              .catch((error) => console.log(error.message));
+
+            await firebase
+              .auth()
+              .currentUser.updateProfile({
+                displayName: username.toLowerCase(),
+                photoURL: url,
+              })
+              .then(() => console.log('成功2'))
+              .catch((error) => {
+                setErrorText(error.message);
+              });
+
+            setActiveUser((prev) => ({
+              ...prev,
+              bikeImageUrl: url,
+              carModel,
+              emailAddress,
+              maker,
+              username,
+            }));
+
+            successUpdateToast();
+          } else {
+            await firebase
+              .firestore()
+              .collection('users')
+              .doc(activeUser?.docId)
+              .update({
+                username: username.toLowerCase(),
+                carModel,
+                maker,
+                emailAddress: emailAddress.toLowerCase(),
+              })
+              .then(() => console.log('成功1'))
+              .catch((error) => console.log(error.message));
+
+            await firebase
+              .auth()
+              .currentUser.updateProfile({
+                displayName: username.toLowerCase(),
+              })
+              .then(() => console.log('成功2'))
+              .catch((error) => {
+                setErrorText(error.message);
+              });
+
+            setActiveUser((prev) => ({
+              ...prev,
+              carModel,
+              emailAddress,
+              maker,
+              username,
+            }));
+            successUpdateToast();
+          }
+        }
       } catch (error) {
         setErrorText(error.message);
       }
     } else {
       history.push(ROUTES.LOGIN);
     }
+    setIsActioning(false);
   };
 
   return (
@@ -187,13 +232,13 @@ export default function ProfileEdit() {
                       type="text"
                       className="w-11/12 border border-gray-400 focus:outline-none focus:text-gray-600 p-2 text-black-base"
                       placeholder="田中太郎"
-                      onChange={({ target }) => setUsername(target.value)}
+                      onChange={({ target }) => setUsername(target.value.trim())}
                       value={username}
                     />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="email" forh className="text-sm text-gray-400">
+                  <label htmlFor="email" className="text-sm text-gray-400">
                     メールアドレス
                   </label>
                   <div className="w-full inline-flex border">
@@ -217,6 +262,11 @@ export default function ProfileEdit() {
                       value={emailAddress}
                     />
                   </div>
+                </div>
+                <div>
+                  <button type="button" onClick={openResetModal} className="text-sm text-logoColor-base focus:outline-none hover:opacity-70">
+                    パスワードの変更はこちらから
+                  </button>
                 </div>
               </div>
             </div>
@@ -465,7 +515,7 @@ export default function ProfileEdit() {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="carModel" forh className="text-sm text-gray-400">
+                  <label htmlFor="carModel" className="text-sm text-gray-400">
                     車種
                   </label>
                   <div className="w-full inline-flex border">
@@ -480,97 +530,63 @@ export default function ProfileEdit() {
                     />
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <hr />
-            <div>
-              <div className="md:inline-flex w-full space-y-4 md:space-y-0 pb-2 pt-8 px-8 text-gray-500 items-center">
-                <h2 className="md:w-4/12 max-w-sm mx-auto">パスワード</h2>
-
-                <div className="md:w-5/12 w-full md:pl-9 max-w-sm mx-auto space-y-5 pl-2">
-                  <div>
-                    <div className="w-full inline-flex border-b">
-                      <div className="bg-gray-100 p-2">
-                        <svg fill="none" className="w-6 text-gray-400 mx-auto" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="text-right">
+                  <button
+                    type="submit"
+                    className={`text-white text-center w-auto mx-auto max-w-sm rounded-md bg-logoColor-base py-2 px-4 inline-flex items-center focus:outline-none mt-3 ${
+                      isInvalid ? 'opacity-50' : 'hover:opacity-70'
+                    }`}
+                    disabled={isInvalid}
+                  >
+                    {isActioning ? (
+                      '送信中...'
+                    ) : (
+                      <>
+                        {' '}
+                        <svg fill="none" className="w-4 text-white mr-2" viewBox="0 0 24 24" stroke="currentColor">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth="2"
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                           />
                         </svg>
-                      </div>
-                      <input
-                        type="password"
-                        className="text-black-base w-11/12 focus:outline-none focus:text-gray-600 p-2 "
-                        placeholder="パスワード"
-                        onChange={({ target }) => {
-                          setPassword(target.value);
-                          setIsMatchPassword(target.value === password);
-                          setIsPasswordLength(target.value.length >= 6);
-                        }}
-                        onBlur={() => {
-                          if (password === '') {
-                            setIsMatchPassword(true);
-                            setIsPasswordLength(true);
-                          }
-                        }}
-                        value={password}
-                      />
-                    </div>
-                    {isPasswordLength ? null : <p className="text-red-500 text-xs">英数字で6文字以上を入力してください。</p>}
-                  </div>
-                  <div>
-                    <div className="w-full inline-flex border-b">
-                      <div className="bg-gray-100 pt-2.5 pb-1.5 px-2">
-                        <img src="/images/passwordConfirmIcon.png" alt="パスワードの確認" className="w-6 h-6 mx-auto" />
-                      </div>
-                      <input
-                        type="password"
-                        className="w-11/12 focus:outline-none focus:text-gray-600 pt-2 block text-black-base"
-                        placeholder="パスワードの確認"
-                        onChange={({ target }) => {
-                          setConfirmPassword(target.value);
-                          setIsMatchPassword(target.value === password);
-                        }}
-                        onBlur={() => {
-                          if (password === '') {
-                            setIsMatchPassword(true);
-                          }
-                        }}
-                        value={confirmPassword}
-                      />
-                    </div>
-                    {isMatchPassword ? null : <p className="text-red-500 text-xs">パスワードが一致していません。</p>}
-                  </div>
-                </div>
-
-                <div className="md:w-3/12 text-right md:pl-6 md:mt-0 mt-5 self-end">
-                  <button
-                    type="submit"
-                    className={`text-white text-center w-auto mx-auto max-w-sm rounded-md bg-logoColor-base py-2 px-4 inline-flex items-center focus:outline-none md:float-right  ${
-                      isInvalid && 'opacity-50'
-                    }`}
-                    disabled={isInvalid}
-                  >
-                    <svg fill="none" className="w-4 text-white mr-2" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                      />
-                    </svg>
-                    更新
+                        更新
+                      </>
+                    )}
                   </button>
+                  {errorText ? (
+                    errorText.includes('Log in again before retrying this request.') ? (
+                      <p className="p-4 text-xs text-red-primary text-left">
+                        ログインから時間が経過しています。
+                        <button
+                          type="button"
+                          className="text-logoColor-base focus:outline-none underline"
+                          onClick={() => {
+                            firebase.auth().signOut();
+                            history.push(ROUTES.LOGIN);
+                          }}
+                        >
+                          こちら
+                        </button>
+                        から再度ログインをお願いいたします。
+                      </p>
+                    ) : (
+                      <p className="p-4 text-xs text-red-primary text-right">{errorText}</p>
+                    )
+                  ) : null}
                 </div>
               </div>
-              {errorText ? <p className="p-4 text-xs text-red-primary text-right">{errorText}</p> : null}
             </div>
+
             <hr />
+
             <div className="w-full p-4 text-right text-white ">
-              <button type="button" className="inline-flex items-center focus:outline-none mr-4 bg-red-600 px-3 py-2 rounded-md hover:opacity-70">
+              <button
+                type="button"
+                onClick={openDeleteAccountModal}
+                className="inline-flex items-center focus:outline-none mr-4 bg-red-600 px-3 py-2 rounded-md hover:opacity-70"
+              >
                 <svg fill="none" className="w-4 mr-2" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
@@ -585,6 +601,27 @@ export default function ProfileEdit() {
           </div>
         </form>
       </section>
+      {isResetModalOpen ? (
+        <ResetPasswordModal
+          setIsResetModalOpen={setIsResetModalOpen}
+          resetEmail={resetEmail}
+          setResetEmail={setResetEmail}
+          successResetToast={successResetToast}
+        />
+      ) : null}
+      {isDeleteAccountModalOpen ? <DeleteAccountModal setIsDeleteAccountModalOpen={setIsDeleteAccountModalOpen} /> : null}
+      <Toaster
+        position="bottom-right"
+        reverseOrder={false}
+        gutter={8}
+        toastOptions={{
+          duration: 8000,
+          // Default options for specific types
+          success: {
+            duration: 5000,
+          },
+        }}
+      />
     </div>
   );
 }

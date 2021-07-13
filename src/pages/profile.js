@@ -2,7 +2,7 @@
 
 import { useParams, useHistory } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
-import { getUserByUsername } from '../services/firebase';
+import { getUserByUsername, getUserPhotosByUserId } from '../services/firebase';
 import * as ROUTES from '../constants/routes';
 import Header from '../components/header';
 import UserProfile from '../components/profile';
@@ -13,6 +13,7 @@ import ModalContext from '../context/modal';
 import PostEditModal from '../components/postEditModal';
 import PostDetailModal from '../components/postDetailModal';
 import LoggedInUserContext from '../context/logged-in-user';
+import UserPhotosContext from '../context/userPhotos';
 
 export default function Profile() {
   const { username } = useParams();
@@ -22,13 +23,14 @@ export default function Profile() {
   const [isOpenFollowedModal, setIsOpenFollowedModal] = useState(false);
   const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
   const { user: activeUser } = useContext(LoggedInUserContext);
-  const { setLoggedInUserPhotos } = useContext(LoggedInUserContext);
   const isPostUser = user?.username === activeUser?.username;
 
   useEffect(() => {
     async function checkUserExists() {
       const [user] = await getUserByUsername(username);
-      if (user?.userId) {
+      if (user?.userId && isPostUser) {
+        setUser(activeUser);
+      } else if (user?.userId) {
         setUser(user);
       } else {
         history.push(ROUTES.NOT_FOUND);

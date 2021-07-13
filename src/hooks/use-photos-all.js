@@ -5,7 +5,6 @@ import { getPhotosAll } from '../services/firebase';
 export default function usePhotosAll(user) {
   const [photos, setPhotos] = useState(null);
   const { loggedInUserPhotos, setLoggedInUserPhotos } = useContext(UserPhotosContext);
-  console.log(loggedInUserPhotos);
 
   useEffect(() => {
     async function getTimelinePhotosAll() {

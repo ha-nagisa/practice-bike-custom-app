@@ -76,6 +76,7 @@ export default function PostPhoto() {
   return (
     <div className="flex items-center justify-center mb-12">
       <form className="grid bg-white rounded-lg shadow-xl w-11/12 md:w-9/12 lg:w-3/5" onSubmit={handlePostPhoto} method="POST">
+        <h1 className="text-center text-2xl font-bold pt-7">投稿画面</h1>
         <div className="grid grid-cols-1 mt-5 mx-7">
           <label htmlFor="title" className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">
             タイトル

@@ -16,12 +16,13 @@ import PostEditModal from '../components/postEditModal';
 import PostDetailModal from '../components/postDetailModal';
 import PostErrorModal from '../components/postErrorModal';
 import MobileSidebar from '../components/sidebar/mobile-sidebar';
-import { getSuggestedProfiles } from '../services/firebase';
+import { getSuggestedProfiles, getUserPhotosByUserId } from '../services/firebase';
 import SuggestionsProfilesContext from '../context/suggestions-profiles';
+import UserPhotosContext from '../context/userPhotos';
 
 export default function Dashboard({ user: loggedInUser }) {
   const [postConditional, setPostConditional] = useState('all');
-  const { user: activeUser, setActiveUser } = useContext(LoggedInUserContext);
+  const { user: activeUser } = useContext(LoggedInUserContext);
   const { modalInfo, isModalOpen, setIsModalOpen } = useContext(ModalContext);
   const isPostUser = modalInfo?.username === activeUser?.username;
   const [profiles, setProfiles] = useState(null);

@@ -9,7 +9,7 @@ import LoggedInUserContext from '../../context/logged-in-user';
 
 export default function Profile({ user, setIsOpenFollowingModal, setIsOpenFollowedModal }) {
   const { user: activeUser } = useContext(LoggedInUserContext);
-  const { loggedInUserPhotos, setLoggedInUserPhotos } = useContext(UserPhotosContext);
+  const { loggedInUserPhotos } = useContext(UserPhotosContext);
   const reducer = (state, newState) => ({ ...state, ...newState });
   const initialState = {
     profile: {},
@@ -24,7 +24,6 @@ export default function Profile({ user, setIsOpenFollowingModal, setIsOpenFollow
       let photos = await getUserPhotosByUserId(user.userId);
       photos.sort((a, b) => b.dateCreated - a.dateCreated);
       if (activeUser?.userId === user?.userId) {
-        setLoggedInUserPhotos(photos);
         photos = !loggedInUserPhotos ? photos : loggedInUserPhotos;
       }
       dispatch({ profile: user, photosCollection: photos, followerCount: user.followers.length });

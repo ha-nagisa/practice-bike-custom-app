@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
+/* eslint-disable no-nested-ternary */
 import { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
-import useUser from '../../hooks/use-user';
+import * as ROUTES from '../../constants/routes';
 import { isUserFollowingProfile, toggleFollow } from '../../services/firebase';
-import UserContext from '../../context/user';
 import { backfaceFixed } from '../../utils/backfaceFixed';
 import LoggedInUserContext from '../../context/logged-in-user';
 
@@ -73,21 +74,26 @@ export default function Header({
             <p className="text-xl font-medium text-center">
               {activeBtnFollow && isFollowingProfile === null ? (
                 <Skeleton count={1} width={100} height={32} />
+              ) : activeBtnFollow ? (
+                <button
+                  className="border border-logoColor-base bg-logoColor-base font-bold text-sm rounded text-white w-full h-8 mb-2 hover:bg-white hover:text-logoColor-base focus:outline-none"
+                  type="button"
+                  onClick={handleToggleFollow}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      handleToggleFollow();
+                    }
+                  }}
+                >
+                  {isFollowingProfile ? 'Unfollow' : 'Follow'}
+                </button>
               ) : (
-                activeBtnFollow && (
-                  <button
-                    className="border border-logoColor-base bg-logoColor-base font-bold text-sm rounded text-white w-full h-8 mb-2 hover:bg-white hover:text-logoColor-base focus:outline-none"
-                    type="button"
-                    onClick={handleToggleFollow}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter') {
-                        handleToggleFollow();
-                      }
-                    }}
-                  >
-                    {isFollowingProfile ? 'Unfollow' : 'Follow'}
-                  </button>
-                )
+                <Link
+                  to={ROUTES.PROFILE_EDIT}
+                  className="block border border-gray-500 bg-white font-bold text-sm rounded text-gray-500 w-full px-2 py-1 sm:mb-2 mb-0 hover:opacity-70 focus:outline-none"
+                >
+                  プロフィールの編集
+                </Link>
               )}
             </p>
           </div>

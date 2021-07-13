@@ -14,7 +14,6 @@ export default function Post({ content }) {
   const location = useLocation();
   const isProfilePage = location.pathname.includes('/p/');
 
-  console.log(location.pathname);
   const [postUser, setPostUser] = useState('');
   useEffect(() => {
     const getUser = async () => {

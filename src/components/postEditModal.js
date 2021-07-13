@@ -9,6 +9,7 @@ import UserContext from '../context/user';
 import useUser from '../hooks/use-user';
 import UserPhotosContext from '../context/userPhotos';
 import { backfaceFixed } from '../utils/backfaceFixed';
+import { getUserPhotosByUserId } from '../services/firebase';
 
 export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
   const { user: loggedInUser } = useContext(UserContext);
@@ -26,6 +27,18 @@ export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
   const [previewWorkImageSrc, setPreviewWorkImageSrc] = useState(modalInfo.imageSrc ? modalInfo.imageSrc : null);
 
   const isInvalid = title === '' || description === '' || category === '' || workHours === '' || workMoney === '' || workImage === null;
+
+  useEffect(async () => {
+    async function getUserPhotosAll() {
+      const [userPhotos] = await getUserPhotosByUserId(user.uid);
+      [userPhotos].sort((a, b) => b.dateCreated - a.dateCreated);
+      setLoggedInUserPhotos(userPhotos);
+    }
+
+    if (user?.uid) {
+      await getUserPhotosAll();
+    }
+  }, [user?.uid]);
 
   const onChangeImageHandler = (e) => {
     if (e.target.files[0]) {

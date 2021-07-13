@@ -14,7 +14,8 @@ export default function usePhotos(user) {
         if (loggedInUserPhotos) {
           const favoritedPhotoInUserPhotos = favoritedPhotos.map((favaritedphoto) => {
             const copyLoggedInUserPhotos = loggedInUserPhotos;
-            if (copyLoggedInUserPhotos.some((userPhoto) => userPhoto.docId === favaritedphoto.docId)) {
+            console.log(copyLoggedInUserPhotos);
+            if (copyLoggedInUserPhotos && copyLoggedInUserPhotos.some((userPhoto) => userPhoto.docId === favaritedphoto.docId)) {
               return copyLoggedInUserPhotos.filter((userPhoto) => userPhoto.docId === favaritedphoto.docId)[0];
             }
             return favaritedphoto;
