@@ -73,12 +73,12 @@ export default function Header() {
             ) : (
               <>
                 <Link to={ROUTES.LOGIN}>
-                  <button type="button" className="bg-blue-medium font-bold text-sm rounded text-white w-20 h-8">
+                  <button type="button" className="bg-logoColor-base font-bold text-sm rounded text-white w-20 h-8">
                     Log In
                   </button>
                 </Link>
                 <Link to={ROUTES.SIGN_UP}>
-                  <button type="button" className="font-bold text-sm rounded text-blue-medium w-20 h-8">
+                  <button type="button" className="font-bold text-sm rounded text-logoColor-base w-20 h-8">
                     Sign Up
                   </button>
                 </Link>

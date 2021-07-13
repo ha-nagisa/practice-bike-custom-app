@@ -8,7 +8,6 @@ import Post from './post';
 export default function TimelineFavorite() {
   const { user } = useContext(LoggedInUserContext);
   const { photos } = usePhotosFavorite(user);
-  console.log(photos);
 
   return (
     <>
