@@ -12,7 +12,7 @@ export default function PostPhoto() {
   const history = useHistory();
   const { user: loggedInUser } = useContext(UserContext);
   const { user } = useUser(loggedInUser?.uid);
-  const { loggedInUserPhotos, setLoggedInUserPhotos } = useContext(UserPhotosContext);
+  const { setLoggedInUserPhotos } = useContext(UserPhotosContext);
   const { firebase } = useContext(FirebaseContext);
 
   const [title, setTitle] = useState('');
@@ -22,8 +22,9 @@ export default function PostPhoto() {
   const [workMoney, setWorkMoney] = useState(null);
   const [workImage, setWorkImage] = useState(null);
   const [previewWorkImageSrc, setPreviewWorkImageSrc] = useState('');
+  const [isPosting, setIsPosting] = useState(false);
 
-  const isInvalid = title === '' || description === '' || category === '' || workHours === '' || workMoney === '' || workImage === null;
+  const isInvalid = title === '' || description === '' || category === '' || workHours === '' || workMoney === '' || workImage === null || isPosting;
 
   const onChangeImageHandler = (e) => {
     if (e.target.files[0]) {
@@ -39,6 +40,7 @@ export default function PostPhoto() {
 
   const handlePostPhoto = async (event) => {
     event.preventDefault();
+    setIsPosting(true);
     try {
       let workImageUrl = '';
       if (workImage) {
@@ -71,6 +73,7 @@ export default function PostPhoto() {
     } catch (error) {
       alert(error.message);
     }
+    setIsPosting(false);
   };
 
   return (
@@ -287,7 +290,7 @@ export default function PostPhoto() {
             }`}
             disabled={isInvalid}
           >
-            投稿
+            {isPosting ? '...投稿中' : '投稿'}
           </button>
         </div>
       </form>
