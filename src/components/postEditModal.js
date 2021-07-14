@@ -67,7 +67,7 @@ export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
         workImageUrl = await firebase.storage().ref('posts').child(fileName).getDownloadURL();
       }
 
-      firebase.firestore().collection('photos').doc(modalInfo.docId).update({
+      await firebase.firestore().collection('photos').doc(modalInfo.docId).update({
         title,
         description,
         imageSrc: workImageUrl,

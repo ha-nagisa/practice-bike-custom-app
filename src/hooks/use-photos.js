@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { format } from 'date-fns';
 import { getPhotos } from '../services/firebase';
 
 export default function usePhotos(user) {
@@ -10,7 +11,7 @@ export default function usePhotos(user) {
       if (user?.following?.length > 0) {
         const followedUserPhotos = await getPhotos(user.userId, user.following);
         // 日付順に並び替える
-        followedUserPhotos.sort((a, b) => b.dateCreated - a.dateCreated);
+        followedUserPhotos.sort((a, b) => (a.dateCreated > b.dateCreated ? -1 : 1));
         setPhotos(followedUserPhotos);
       } else {
         setPhotos([]);

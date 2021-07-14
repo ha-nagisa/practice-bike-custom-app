@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { firebase, FieldValue } from '../lib/firebase';
 
 export async function doesUsernameExist(username) {
@@ -12,6 +13,7 @@ export async function getUserByUsername(username) {
   return result.docs.map((item) => ({
     ...item.data(),
     docId: item.id,
+    dateCreated: format(item.data().dateCreated.toDate(), 'yyyy/MM/dd'),
   }));
 }
 
@@ -21,6 +23,7 @@ export async function getUserByUserId(userId) {
   const user = result.docs.map((item) => ({
     ...item.data(),
     docId: item.id,
+    dateCreated: format(item.data().dateCreated.toDate(), 'yyyy/MM/dd'),
   }));
   return user;
 }
@@ -39,6 +42,7 @@ export async function getSuggestedProfiles(userId, following, maker) {
   const profiles = result.docs.map((user) => ({
     ...user.data(),
     docId: user.id,
+    dateCreated: format(user.data().dateCreated.toDate(), 'yyyy/MM/dd'),
   }));
 
   const gettedProfileIds = profiles.map((user) => user.userId);
@@ -55,10 +59,11 @@ export async function getSuggestedProfiles(userId, following, maker) {
     const addProfiles = addResult.docs.map((user) => ({
       ...user.data(),
       docId: user.id,
+      dateCreated: format(user.data().dateCreated.toDate(), 'yyyy/MM/dd'),
     }));
 
     const sumProfiles = [...addProfiles, ...profiles];
-    sumProfiles.sort((a, b) => b.dateCreated - a.dateCreated);
+    sumProfiles.sort((a, b) => (a.dateCreated > b.dateCreated ? -1 : 1));
 
     return sumProfiles;
   }
@@ -101,6 +106,7 @@ export async function getPhotos(userId, following) {
   const userFollowedPhotos = result.docs.map((photo) => ({
     ...photo.data(),
     docId: photo.id,
+    dateCreated: format(photo.data().dateCreated.toDate(), 'yyyy/MM/dd'),
   }));
 
   const photosWithUserDetails = await Promise.all(
@@ -126,6 +132,7 @@ export async function getPhotosFavorite(userId, likes) {
   const photoAll = result.docs.map((photo) => ({
     ...photo.data(),
     docId: photo.id,
+    dateCreated: format(photo.data().dateCreated.toDate(), 'yyyy/MM/dd'),
   }));
 
   const likesPhotos = likes.map((likedDocId) => {
@@ -150,14 +157,29 @@ export async function getPhotosFavorite(userId, likes) {
   return photosWithUserDetails;
 }
 
-export async function getPhotosAll(userId) {
-  // [5,4,2] => following
-  const result = await firebase.firestore().collection('photos').orderBy('dateCreated').limit(100).get();
+export async function getPhotosAll(userId, latestDoc) {
+  let result;
+  if (latestDoc) {
+    result = await firebase
+      .firestore()
+      .collection('photos')
+      .orderBy('dateCreated', 'desc')
+      .startAfter(latestDoc || 0)
+      .limit(6)
+      .get();
+  } else {
+    result = await firebase.firestore().collection('photos').orderBy('dateCreated', 'desc').limit(6).get();
+  }
+
+  const lastDoc = result.docs[result.docs.length - 1];
 
   const userFollowedPhotos = result.docs.map((photo) => ({
     ...photo.data(),
     docId: photo.id,
+    dateCreated: format(photo.data().dateCreated.toDate(), 'yyyy/MM/dd'),
   }));
+
+  console.log(userFollowedPhotos);
 
   const photosWithUserDetails = await Promise.all(
     userFollowedPhotos.map(async (photo) => {
@@ -165,24 +187,23 @@ export async function getPhotosAll(userId) {
       if (photo.likes.includes(userId)) {
         userLikedPhoto = true;
       }
-      // photo.userId = 2
       const user = await getUserByUserId(photo.userId);
-      // raphael
       const { username } = user[0];
       return { username, ...photo, userLikedPhoto };
     })
   );
 
-  return photosWithUserDetails;
+  return { photosWithUserDetails, lastDoc };
 }
 
 export async function getUserPhotosByUserId(userId) {
   if (userId) {
-    const result = await firebase.firestore().collection('photos').where('userId', '==', userId).get();
+    const result = await firebase.firestore().collection('photos').where('userId', '==', userId).orderBy('dateCreated', 'disc').get();
 
     const userPhotos = result.docs.map((photo) => ({
       ...photo.data(),
       docId: photo.id,
+      dateCreated: format(photo.data().dateCreated.toDate(), 'yyyy/MM/dd'),
     }));
 
     const photosWithUserDetails = await Promise.all(
@@ -216,6 +237,7 @@ export async function isUserFollowingProfile(loggedInUserUsername, profileUserId
   const [response = {}] = result.docs.map((item) => ({
     ...item.data(),
     docId: item.id,
+    dateCreated: format(item.data().dateCreated.toDate(), 'yyyy/MM/dd'),
   }));
 
   return response.userId;
@@ -246,6 +268,7 @@ export async function getProfileFollowingUsers(following) {
     users = result.docs.map((user) => ({
       ...user.data(),
       docId: user.id,
+      dateCreated: format(user.data().dateCreated.toDate(), 'yyyy/MM/dd'),
     }));
   }
 
@@ -265,6 +288,7 @@ export async function getProfileFollowedgUsers(followed) {
     users = result.docs.map((user) => ({
       ...user.data(),
       docId: user.id,
+      dateCreated: format(user.data().dateCreated.toDate(), 'yyyy/MM/dd'),
     }));
   }
 

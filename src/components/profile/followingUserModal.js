@@ -68,7 +68,7 @@ export default function FollowingUserModal({ user, setIsOpenFollowingModal }) {
 FollowingUserModal.propTypes = {
   user: PropTypes.shape({
     docId: PropTypes.string,
-    dateCreated: PropTypes.number,
+    dateCreated: PropTypes.string,
     emailAddress: PropTypes.string,
     followers: PropTypes.array,
     following: PropTypes.array,

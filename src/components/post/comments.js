@@ -37,7 +37,7 @@ export default function Comments({ docId, comments: allComments, posted, comment
             View more comments
           </button>
         )}
-        <p className="text-gray-base uppercase text-xs mt-2">{formatDistance(posted, new Date())} ago</p>
+        <p className="text-gray-base uppercase text-xs mt-2">{posted}</p>
       </div>
       <AddComment docId={docId} comments={comments} setComments={setComments} commentInput={commentInput} />
     </>

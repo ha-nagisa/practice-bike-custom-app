@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/no-onchange */
 import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import firebaseApp from 'firebase/app';
 import FirebaseContext from '../context/firebase';
 import UserContext from '../context/user';
 import useUser from '../hooks/use-user';
@@ -65,7 +66,7 @@ export default function PostPhoto() {
         category,
         workMoney,
         workHours,
-        dateCreated: Date.now(),
+        dateCreated: firebaseApp.firestore.FieldValue.serverTimestamp(),
       });
 
       setLoggedInUserPhotos((photos) => [...photos]);

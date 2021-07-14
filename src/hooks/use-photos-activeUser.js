@@ -7,11 +7,7 @@ export default function useActiveUserPhotos(userId) {
   useEffect(() => {
     async function getUserPhotosAll() {
       const Photos = await getUserPhotosByUserId(userId);
-      if (Photos) {
-        Photos.sort((a, b) => b.dateCreated - a.dateCreated);
-      }
       setLoggedInUserPhotos(Photos);
-      console.log(loggedInUserPhotos);
     }
 
     getUserPhotosAll();

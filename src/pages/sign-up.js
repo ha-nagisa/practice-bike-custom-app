@@ -3,7 +3,7 @@
 
 import { useState, useContext, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+import firebaseApp from 'firebase/app';
 import FirebaseContext from '../context/firebase';
 import * as ROUTES from '../constants/routes';
 import { doesUsernameExist } from '../services/firebase';
@@ -70,7 +70,7 @@ export default function SignUp() {
           following: [],
           followers: [],
           likes: [],
-          dateCreated: Date.now(),
+          dateCreated: firebaseApp.firestore.FieldValue.serverTimestamp(),
         });
 
         history.push(ROUTES.DASHBOARD);

@@ -1,4 +1,5 @@
 import { useReducer, useEffect, useContext } from 'react';
+import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 import Header from './header';
 import Photos from './photos';
@@ -22,7 +23,7 @@ export default function Profile({ user, setIsOpenFollowingModal, setIsOpenFollow
   useEffect(() => {
     async function getProfileInfoAndPhotos() {
       let photos = await getUserPhotosByUserId(user.userId);
-      photos.sort((a, b) => b.dateCreated - a.dateCreated);
+      photos.sort((a, b) => (a.dateCreated > b.dateCreated ? -1 : 1));
       if (activeUser?.userId === user?.userId) {
         photos = !loggedInUserPhotos ? photos : loggedInUserPhotos;
       }
@@ -49,7 +50,7 @@ export default function Profile({ user, setIsOpenFollowingModal, setIsOpenFollow
 Profile.propTypes = {
   user: PropTypes.shape({
     docId: PropTypes.string,
-    dateCreated: PropTypes.number,
+    dateCreated: PropTypes.string,
     emailAddress: PropTypes.string,
     followers: PropTypes.array,
     following: PropTypes.array,
