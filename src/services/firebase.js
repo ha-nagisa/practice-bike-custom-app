@@ -150,9 +150,22 @@ export async function getPhotosFavorite(userId, likes) {
   return photosWithUserDetails;
 }
 
-export async function getPhotosAll(userId) {
-  // [5,4,2] => following
-  const result = await firebase.firestore().collection('photos').orderBy('dateCreated').limit(100).get();
+export async function getPhotosAll(userId, latestDoc) {
+  let result;
+
+  if (latestDoc) {
+    result = await firebase
+      .firestore()
+      .collection('photos')
+      .orderBy('dateCreated', 'desc')
+      .startAfter(latestDoc || 0)
+      .limit(6)
+      .get();
+  } else {
+    result = await firebase.firestore().collection('photos').orderBy('dateCreated', 'desc').limit(6).get();
+  }
+
+  const lastDoc = result ? result.docs[result.docs.length - 1] : undefined;
 
   const userFollowedPhotos = result.docs.map((photo) => ({
     ...photo.data(),
@@ -173,7 +186,7 @@ export async function getPhotosAll(userId) {
     })
   );
 
-  return photosWithUserDetails;
+  return { photosWithUserDetails, lastDoc };
 }
 
 export async function getUserPhotosByUserId(userId) {

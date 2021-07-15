@@ -18,7 +18,7 @@ export default function Header() {
         <div className="flex justify-between h-full">
           <div className="text-gray-700 text-center flex items-center align-items cursor-pointer">
             <h1 className="flex justify-center w-full">
-              <Link to={ROUTES.DASHBOARD} aria-label="Instagram logo">
+              <Link to={ROUTES.DASHBOARD} aria-label="Bun Bun BIKE logo">
                 <img src="/images/smLoginLogo.png" alt="bun bun bike" width="200px" className="" />
               </Link>
             </h1>
@@ -60,7 +60,7 @@ export default function Header() {
                     <Link to={`/p/${user?.username}`}>
                       <img
                         className="object-cover w-8 h-8 rounded-full flex"
-                        src={!user.bikeImageUrl ? `/images/avatars/default.png` : user.bikeImageUrl}
+                        src={user.bikeImageUrl}
                         alt={`${user?.username} profile`}
                         onError={(e) => {
                           e.target.src = DEFAULT_IMAGE_PATH;
@@ -73,12 +73,12 @@ export default function Header() {
             ) : (
               <>
                 <Link to={ROUTES.LOGIN}>
-                  <button type="button" className="bg-logoColor-base font-bold text-sm rounded text-white w-20 h-8">
+                  <button type="button" className="bg-blue-medium font-bold text-sm rounded text-white w-20 h-8">
                     Log In
                   </button>
                 </Link>
                 <Link to={ROUTES.SIGN_UP}>
-                  <button type="button" className="font-bold text-sm rounded text-logoColor-base w-20 h-8">
+                  <button type="button" className="font-bold text-sm rounded text-blue-medium w-20 h-8">
                     Sign Up
                   </button>
                 </Link>
