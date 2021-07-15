@@ -48,7 +48,7 @@ export async function getSuggestedProfiles(userId, following, maker) {
     if (following.length > 0) {
       query = query.where('userId', 'not-in', [...following, userId, ...gettedProfileIds]);
     } else {
-      query = query.where('userId', 'not-in', [...following, ...gettedProfileIds]);
+      query = query.where('userId', 'not-in', [...following, userId, ...gettedProfileIds]);
     }
     const addResult = await query.limit(15 - result.docs.length).get();
 
@@ -94,9 +94,23 @@ export async function updateFollowedUserFollowers(
     });
 }
 
-export async function getPhotos(userId, following) {
-  // [5,4,2] => following
-  const result = await firebase.firestore().collection('photos').where('userId', 'in', following).get();
+export async function getPhotos(userId, following, latestDoc) {
+  let result;
+  console.log(following);
+  if (latestDoc) {
+    result = await firebase
+      .firestore()
+      .collection('photos')
+      .where('userId', 'in', following)
+      .orderBy('dateCreated', 'desc')
+      .startAfter(latestDoc || 0)
+      .limit(6)
+      .get();
+  } else {
+    result = await firebase.firestore().collection('photos').where('userId', 'in', following).orderBy('dateCreated', 'desc').limit(6).get();
+  }
+
+  const lastDoc = result ? result.docs[result.docs.length - 1] : undefined;
 
   const userFollowedPhotos = result.docs.map((photo) => ({
     ...photo.data(),
@@ -117,20 +131,17 @@ export async function getPhotos(userId, following) {
     })
   );
 
-  return photosWithUserDetails;
+  return { photosWithUserDetails, lastDoc };
 }
 
 export async function getPhotosFavorite(userId, likes) {
-  const result = await firebase.firestore().collection('photos').get();
+  let likesPhotos;
 
-  const photoAll = result.docs.map((photo) => ({
-    ...photo.data(),
-    docId: photo.id,
-  }));
-
-  const likesPhotos = likes.map((likedDocId) => {
-    const a = { ...photoAll.filter((photo) => photo.docId === likedDocId) };
-    return a[0];
+  await Promise.all(likes.map((docId) => firebase.firestore().collection('photos').doc(docId).get())).then((docs) => {
+    likesPhotos = docs.map((doc) => ({
+      ...doc.data(),
+      docId: doc.id,
+    }));
   });
 
   const photosWithUserDetails = await Promise.all(
@@ -212,8 +223,6 @@ export async function getUserPhotosByUserId(userId) {
       })
     );
 
-    console.log(photosWithUserDetails);
-
     return photosWithUserDetails;
   }
   return null;
@@ -235,14 +244,8 @@ export async function isUserFollowingProfile(loggedInUserUsername, profileUserId
 }
 
 export async function toggleFollow(isFollowingProfile, activeUserDocId, profileDocId, profileUserId, followingUserId) {
-  // 1st param: karl's doc id
-  // 2nd param: raphael's user id
-  // 3rd param: is the user following this profile? e.g. does karl follow raphael? (true/false)
   await updateLoggedInUserFollowing(activeUserDocId, profileUserId, isFollowingProfile);
 
-  // 1st param: karl's user id
-  // 2nd param: raphael's doc id
-  // 3rd param: is the user following this profile? e.g. does karl follow raphael? (true/false)
   await updateFollowedUserFollowers(profileDocId, followingUserId, isFollowingProfile);
 }
 

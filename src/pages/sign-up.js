@@ -21,7 +21,8 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState('');
-  const isInvalid = password === '' || emailAddress === '' || username === '' || bikeImage === '' || maker === '' || carModel === '';
+  const isInvalid =
+    password === '' || emailAddress === '' || username === '' || bikeImage === '' || maker === '' || carModel === '' || password.length < 6;
 
   const onChangeImageHandler = (e) => {
     if (e.target.files[0]) {
@@ -362,14 +363,21 @@ export default function SignUp() {
               onChange={({ target }) => setEmailAddress(target.value)}
               value={emailAddress}
             />
-            <input
-              aria-label="Enter your password"
-              type="password"
-              placeholder="パスワード"
-              className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border-2 border-gray-primary focus:outline-none focus:ring-2 focus:ring-logoColor-light rounded mb-4 focus:border-transparent"
-              onChange={({ target }) => setPassword(target.value)}
-              value={password}
-            />
+            <div className="mb-4 mr-3">
+              <input
+                aria-label="Enter your password"
+                type="password"
+                placeholder="パスワード"
+                className="text-sm text-gray-base w-full py-5 px-4 h-2 border-2 border-gray-primary focus:outline-none focus:ring-2 focus:ring-logoColor-light rounded focus:border-transparent"
+                onChange={({ target }) => {
+                  setPassword(target.value);
+                }}
+                value={password}
+              />
+              {password.length > 0 && password.length < 6 ? (
+                <p className="text-xs text-red-primary mt-1">英数字で6文字以上入力してください。</p>
+              ) : null}
+            </div>
             <button
               disabled={isInvalid}
               type="submit"

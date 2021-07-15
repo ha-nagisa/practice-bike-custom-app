@@ -26,8 +26,8 @@ export default function FollowedUserModal({ user, setIsOpenFollowedModal }) {
   };
 
   const leadProfile = (username) => {
-    history.push(`/p/${username}`);
     closeModal();
+    history.push(`/p/${username}`);
   };
 
   return (

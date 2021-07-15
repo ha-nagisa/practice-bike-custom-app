@@ -14,7 +14,6 @@ export default function TimelineAll() {
   const [isLoading, setIsLoading] = useState(false);
   const isDisplayMoreRead = photos ? photos.length > 5 : false;
   const isReachingEnd = latestDoc === undefined;
-  console.log(latestDoc ? latestDoc.data() : latestDoc);
 
   const addNextPhoto = async (doc) => {
     setIsLoading(true);
