@@ -13,7 +13,6 @@ import ModalContext from '../context/modal';
 import PostEditModal from '../components/postEditModal';
 import PostDetailModal from '../components/postDetailModal';
 import LoggedInUserContext from '../context/logged-in-user';
-import UserPhotosContext from '../context/userPhotos';
 
 export default function Profile() {
   const { username } = useParams();
@@ -23,7 +22,7 @@ export default function Profile() {
   const [isOpenFollowedModal, setIsOpenFollowedModal] = useState(false);
   const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
   const { user: activeUser } = useContext(LoggedInUserContext);
-  const isPostUser = user?.username === activeUser?.username;
+  const isPostUser = username === activeUser?.username;
 
   useEffect(() => {
     async function checkUserExists() {

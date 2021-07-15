@@ -26,7 +26,7 @@ export default function Header({
     username: profileUsername,
   },
 }) {
-  const { user: activeUser } = useContext(LoggedInUserContext);
+  const { user: activeUser, setActiveUser } = useContext(LoggedInUserContext);
   const [isFollowingProfile, setIsFollowingProfile] = useState(null);
   const activeBtnFollow = activeUser?.username && activeUser?.username !== profileUsername;
 
@@ -36,6 +36,10 @@ export default function Header({
       followerCount: isFollowingProfile ? followerCount - 1 : followerCount + 1,
     });
     await toggleFollow(isFollowingProfile, activeUser.docId, profileDocId, profileUserId, activeUser.userId);
+    setActiveUser((user) => ({
+      ...user,
+      following: isFollowingProfile ? user.following.filter((uid) => uid !== profileUserId) : [...user.following, profileUserId],
+    }));
   };
 
   useEffect(() => {

@@ -53,22 +53,46 @@ export default function PostPhoto() {
         await firebase.storage().ref(`posts/${fileName}`).put(workImage);
         workImageUrl = await firebase.storage().ref('posts').child(fileName).getDownloadURL();
       }
-      await firebase.firestore().collection('photos').add({
-        title,
-        userId: user.userId,
-        description,
-        imageSrc: workImageUrl,
-        Maker: user.carModel,
-        carModel: user.maker,
-        likes: [],
-        comments: [],
-        category,
-        workMoney,
-        workHours,
-        dateCreated: Date.now(),
-      });
+      await firebase
+        .firestore()
+        .collection('photos')
+        .add({
+          title,
+          userId: user.userId,
+          description,
+          imageSrc: workImageUrl,
+          Maker: user.carModel,
+          carModel: user.maker,
+          likes: [],
+          comments: [],
+          category,
+          workMoney,
+          workHours,
+          dateCreated: Date.now(),
+        })
+        .then((doc) => {
+          setLoggedInUserPhotos((photos) => [
+            {
+              title,
+              userId: user.userId,
+              description,
+              imageSrc: workImageUrl,
+              Maker: user.carModel,
+              carModel: user.maker,
+              likes: [],
+              comments: [],
+              category,
+              workMoney,
+              workHours,
+              dateCreated: Date.now(),
+              docId: doc.id,
+              userLikedPhoto: false,
+              username: user.username,
+            },
+            ...photos,
+          ]);
+        });
 
-      setLoggedInUserPhotos((photos) => [...photos]);
       history.push(ROUTES.DASHBOARD);
     } catch (error) {
       alert(error.message);

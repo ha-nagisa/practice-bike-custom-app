@@ -10,6 +10,7 @@ import LoggedInUserContext from '../../context/logged-in-user';
 export default function Profile({ user, setIsOpenFollowingModal, setIsOpenFollowedModal }) {
   const { user: activeUser } = useContext(LoggedInUserContext);
   const { loggedInUserPhotos } = useContext(UserPhotosContext);
+  console.log(loggedInUserPhotos);
   const reducer = (state, newState) => ({ ...state, ...newState });
   const initialState = {
     profile: {},
@@ -29,7 +30,7 @@ export default function Profile({ user, setIsOpenFollowingModal, setIsOpenFollow
       dispatch({ profile: user, photosCollection: photos, followerCount: user.followers.length });
     }
     getProfileInfoAndPhotos();
-  }, [user.username]);
+  }, [user.username, loggedInUserPhotos]);
 
   return (
     <>
