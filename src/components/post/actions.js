@@ -2,11 +2,15 @@ import { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import FirebaseContext from '../../context/firebase';
 import UserContext from '../../context/user';
+import useUser from '../../hooks/use-user';
+import LoggedInUserContext from '../../context/logged-in-user';
 
 export default function Actions({ docId, totalLikes, likedPhoto, handleFocus }) {
   const {
     user: { uid: userId },
   } = useContext(UserContext);
+  const { user: loggedInUser, setActiveUser } = useContext(LoggedInUserContext);
+  const { user: userSore } = useUser(userId);
   const [toggleLiked, setToggleLiked] = useState(likedPhoto);
   const [likes, setLikes] = useState(totalLikes);
   const { firebase, FieldValue } = useContext(FirebaseContext);
@@ -23,6 +27,19 @@ export default function Actions({ docId, totalLikes, likedPhoto, handleFocus }) 
       });
 
     setLikes((likes) => (toggleLiked ? likes - 1 : likes + 1));
+
+    await firebase
+      .firestore()
+      .collection('users')
+      .doc(userSore.docId)
+      .update({
+        likes: toggleLiked ? FieldValue.arrayRemove(docId) : FieldValue.arrayUnion(docId),
+      });
+
+    setActiveUser({
+      ...loggedInUser,
+      likes: toggleLiked ? loggedInUser.likes.filter((likeId) => likeId !== docId) : [...loggedInUser.likes, docId],
+    });
   };
 
   return (
@@ -41,7 +58,9 @@ export default function Actions({ docId, totalLikes, likedPhoto, handleFocus }) 
             viewBox="0 0 24 24"
             stroke="currentColor"
             tabIndex={0}
-            className={`w-8 mr-4 select-none cursor-pointer focus:outline-none ${toggleLiked ? 'fill-red text-red-primary' : 'text-black-light'}`}
+            className={`w-8 h-8 mr-4 select-none cursor-pointer focus:outline-none leading-none ${
+              toggleLiked ? 'fill-red text-red-primary' : 'text-black-light'
+            }`}
           >
             <path
               strokeLinecap="round"
@@ -57,7 +76,7 @@ export default function Actions({ docId, totalLikes, likedPhoto, handleFocus }) 
                 handleFocus();
               }
             }}
-            className="w-8 text-black-light select-none cursor-pointer focus:outline-none"
+            className="w-8 h-8 text-black-light select-none cursor-pointer leading-none focus:outline-none"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

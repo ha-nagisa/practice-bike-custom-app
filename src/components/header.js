@@ -19,30 +19,13 @@ export default function Header() {
           <div className="text-gray-700 text-center flex items-center align-items cursor-pointer">
             <h1 className="flex justify-center w-full">
               <Link to={ROUTES.DASHBOARD} aria-label="Instagram logo">
-                <img src="/images/smLoginLogo.png" alt="bun bun bike" width="200px" className="mt-2" />
+                <img src="/images/smLoginLogo.png" alt="bun bun bike" width="200px" className="" />
               </Link>
             </h1>
           </div>
           <div className="text-gray-700 text-center flex items-center align-items">
             {loggedInUser ? (
               <>
-                <Link to={ROUTES.DASHBOARD} aria-label="Dashboard">
-                  <svg
-                    className="w-8 mr-6 text-black-light cursor-pointer"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                    />
-                  </svg>
-                </Link>
-
                 <button
                   type="button"
                   title="Sign Out"
@@ -77,7 +60,7 @@ export default function Header() {
                     <Link to={`/p/${user?.username}`}>
                       <img
                         className="object-cover w-8 h-8 rounded-full flex"
-                        src={user.bikeImageUrl}
+                        src={!user.bikeImageUrl ? `/images/avatars/default.png` : user.bikeImageUrl}
                         alt={`${user?.username} profile`}
                         onError={(e) => {
                           e.target.src = DEFAULT_IMAGE_PATH;
@@ -90,12 +73,12 @@ export default function Header() {
             ) : (
               <>
                 <Link to={ROUTES.LOGIN}>
-                  <button type="button" className="bg-blue-medium font-bold text-sm rounded text-white w-20 h-8">
+                  <button type="button" className="bg-logoColor-base font-bold text-sm rounded text-white w-20 h-8">
                     Log In
                   </button>
                 </Link>
                 <Link to={ROUTES.SIGN_UP}>
-                  <button type="button" className="font-bold text-sm rounded text-blue-medium w-20 h-8">
+                  <button type="button" className="font-bold text-sm rounded text-logoColor-base w-20 h-8">
                     Sign Up
                   </button>
                 </Link>

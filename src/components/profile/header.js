@@ -1,109 +1,135 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
+/* eslint-disable no-nested-ternary */
 import { useState, useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
-import useUser from '../../hooks/use-user';
+import * as ROUTES from '../../constants/routes';
 import { isUserFollowingProfile, toggleFollow } from '../../services/firebase';
-import UserContext from '../../context/user';
-import { DEFAULT_IMAGE_PATH } from '../../constants/paths';
+import { backfaceFixed } from '../../utils/backfaceFixed';
+import LoggedInUserContext from '../../context/logged-in-user';
 
 export default function Header({
   photosCount,
   followerCount,
   setFollowerCount,
+  setIsOpenFollowingModal,
+  setIsOpenFollowedModal,
   profile: {
     docId: profileDocId,
     userId: profileUserId,
     bikeImageUrl: profileBikeImageUrl,
     carModel,
+    maker,
     followers,
     following,
     username: profileUsername,
   },
 }) {
-  const { user: loggedInUser } = useContext(UserContext);
-  const { user } = useUser(loggedInUser?.uid);
+  const { user: activeUser } = useContext(LoggedInUserContext);
   const [isFollowingProfile, setIsFollowingProfile] = useState(null);
-  const activeBtnFollow = user?.username && user?.username !== profileUsername;
+  const activeBtnFollow = activeUser?.username && activeUser?.username !== profileUsername;
 
   const handleToggleFollow = async () => {
     setIsFollowingProfile((isFollowingProfile) => !isFollowingProfile);
     setFollowerCount({
       followerCount: isFollowingProfile ? followerCount - 1 : followerCount + 1,
     });
-    await toggleFollow(isFollowingProfile, user.docId, profileDocId, profileUserId, user.userId);
+    await toggleFollow(isFollowingProfile, activeUser.docId, profileDocId, profileUserId, activeUser.userId);
   };
 
   useEffect(() => {
     const isLoggedInUserFollowingProfile = async () => {
-      const isFollowing = await isUserFollowingProfile(user.username, profileUserId);
+      const isFollowing = await isUserFollowingProfile(activeUser.username, profileUserId);
       setIsFollowingProfile(!!isFollowing);
     };
 
-    if (user?.username && profileUserId) {
+    if (activeUser?.username && profileUserId) {
       isLoggedInUserFollowingProfile();
     }
-  }, [user?.username, profileUserId]);
+  }, [activeUser?.username, profileUserId]);
+
+  const openFollowedModal = () => {
+    backfaceFixed(true);
+    setIsOpenFollowedModal(true);
+  };
+  const openFollowingModal = () => {
+    backfaceFixed(true);
+    setIsOpenFollowingModal(true);
+  };
 
   return (
-    <div className="grid grid-cols-3 gap-4 justify-between mx-auto max-w-screen-lg">
-      <div className="container flex justify-center items-center">
-        {profileBikeImageUrl ? (
+    <div className="block sm:flex sm:justify-center mx-auto max-w-screen-lg">
+      <div className="flex justify-center items-center sm:pr-20">
+        <div className="text-center">
           <img
             className="inline object-cover w-40 h-40 mr-2 rounded-full"
             alt={`${carModel} profile picture`}
-            src={profileBikeImageUrl}
+            src={!profileBikeImageUrl ? `/images/avatars/default.png` : profileBikeImageUrl}
             onError={(e) => {
               e.target.src = `/images/avatars/default.png`;
             }}
           />
-        ) : (
-          <Skeleton circle height={150} width={150} count={1} />
-        )}
-      </div>
-      <div className="flex items-center justify-center flex-col col-span-2">
-        <div className="container flex items-center">
-          <p className="text-2xl mr-4">{profileUsername}</p>
-          {activeBtnFollow && isFollowingProfile === null ? (
-            <Skeleton count={1} width={80} height={32} />
-          ) : (
-            activeBtnFollow && (
-              <button
-                className="bg-blue-medium font-bold text-sm rounded text-white w-20 h-8"
-                type="button"
-                onClick={handleToggleFollow}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') {
-                    handleToggleFollow();
-                  }
-                }}
-              >
-                {isFollowingProfile ? 'Unfollow' : 'Follow'}
-              </button>
-            )
-          )}
+          <div className="container mt-3">
+            <p className="text-xl font-medium text-center">
+              {activeBtnFollow && isFollowingProfile === null ? (
+                <Skeleton count={1} width={100} height={32} />
+              ) : activeBtnFollow ? (
+                <button
+                  className="border border-logoColor-base bg-logoColor-base font-bold text-sm rounded text-white w-full h-8 mb-2 hover:bg-white hover:text-logoColor-base focus:outline-none"
+                  type="button"
+                  onClick={handleToggleFollow}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      handleToggleFollow();
+                    }
+                  }}
+                >
+                  {isFollowingProfile ? 'Unfollow' : 'Follow'}
+                </button>
+              ) : (
+                <Link
+                  to={ROUTES.PROFILE_EDIT}
+                  className="block border border-gray-500 bg-white font-bold text-sm rounded text-gray-500 w-full px-2 py-1 sm:mb-2 mb-0 hover:opacity-70 focus:outline-none"
+                >
+                  プロフィールの編集
+                </Link>
+              )}
+            </p>
+          </div>
         </div>
-        <div className="container flex mt-4">
+      </div>
+      <div className="flex items-center justify-center flex-col text-center mt-2 sm:mt-0 sm:text-left">
+        <div className="container">
+          <p className="text-2xl mr-4 leading-none">
+            <span className="text-xs leading-none block">ユーザーネーム</span>
+            {!profileUsername ? <Skeleton count={1} height={24} width={100} /> : profileUsername}
+          </p>
+          <p className="text-2xl mr-4 leading-none mt-3">
+            <span className="text-xs leading-none block mb-1">バイク</span>
+            {!maker ? <Skeleton count={1} height={24} width={100} /> : maker}
+            {'　'}
+            {!carModel ? <Skeleton count={1} height={24} width={100} /> : carModel}
+          </p>
+        </div>
+        <div className="container flex mt-6 justify-center sm:justify-start">
           {!followers || !following ? (
-            <Skeleton count={1} width={677} height={24} />
+            <Skeleton count={1} width={300} height={24} />
           ) : (
             <>
-              <p className="mr-10">
-                <span className="font-bold">{photosCount}</span> photos
+              <p type="button" className="mr-10">
+                <span className="font-bold text-lg">{photosCount}</span> posts
               </p>
-              <p className="mr-10">
-                <span className="font-bold">{followerCount}</span>
+              <button onClick={openFollowedModal} type="button" className="mr-10 block focus:outline-none">
+                <span className="font-bold text-lg">{followerCount}</span>
                 {` `}
                 {followerCount === 1 ? `follower` : `followers`}
-              </p>
-              <p className="mr-10">
-                <span className="font-bold">{following?.length}</span> following
-              </p>
+              </button>
+              <button onClick={openFollowingModal} type="button" className="block focus:outline-none">
+                <span className="font-bold text-lg">{following?.length}</span> following
+              </button>
             </>
           )}
-        </div>
-        <div className="container mt-4">
-          <p className="font-medium">{!carModel ? <Skeleton count={1} height={24} /> : carModel}</p>
         </div>
       </div>
     </div>
@@ -114,11 +140,14 @@ Header.propTypes = {
   photosCount: PropTypes.number.isRequired,
   followerCount: PropTypes.number.isRequired,
   setFollowerCount: PropTypes.func.isRequired,
+  setIsOpenFollowingModal: PropTypes.func.isRequired,
+  setIsOpenFollowedModal: PropTypes.func.isRequired,
   profile: PropTypes.shape({
     docId: PropTypes.string,
     userId: PropTypes.string,
     bikeImageUrl: PropTypes.string,
     carModel: PropTypes.string,
+    maker: PropTypes.string,
     username: PropTypes.string,
     followers: PropTypes.array,
     following: PropTypes.array,
