@@ -11,7 +11,6 @@ export default function useActiveUserPhotos(userId) {
         Photos.sort((a, b) => b.dateCreated - a.dateCreated);
       }
       setLoggedInUserPhotos(Photos);
-      console.log(loggedInUserPhotos);
     }
 
     getUserPhotosAll();

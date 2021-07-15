@@ -692,6 +692,11 @@ select {
   background-color: rgba(220, 38, 38, var(--tw-bg-opacity));
 }
 
+.bg-blue-medium {
+  --tw-bg-opacity: 1;
+  background-color: rgba(0, 92, 152, var(--tw-bg-opacity));
+}
+
 .bg-logoColor-base {
   --tw-bg-opacity: 1;
   background-color: rgba(255, 152, 0, var(--tw-bg-opacity));
@@ -705,6 +710,11 @@ select {
 .hover\:bg-gray-100:hover {
   --tw-bg-opacity: 1;
   background-color: rgba(243, 244, 246, var(--tw-bg-opacity));
+}
+
+.hover\:bg-gray-700:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgba(55, 65, 81, var(--tw-bg-opacity));
 }
 
 .hover\:bg-logoColor-base:hover {
@@ -833,6 +843,10 @@ select {
 
 .border-l {
   border-left-width: 1px;
+}
+
+.cursor-default {
+  cursor: default;
 }
 
 .cursor-pointer {
@@ -1522,6 +1536,11 @@ select {
 .text-red-primary {
   --tw-text-opacity: 1;
   color: rgba(237, 73, 86, var(--tw-text-opacity));
+}
+
+.text-blue-medium {
+  --tw-text-opacity: 1;
+  color: rgba(0, 92, 152, var(--tw-text-opacity));
 }
 
 .text-logoColor-base {
