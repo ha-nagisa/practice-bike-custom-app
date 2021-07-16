@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
 import * as ROUTES from './constants/routes';
@@ -27,7 +27,6 @@ export default function App() {
   const [modalInfo, setModalInfo] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { loggedInUserPhotos, setLoggedInUserPhotos } = useActiveUserPhotos(user?.uid);
-  console.log(loggedInUserPhotos);
   const { user: activeUser, setActiveUser } = useUser(user?.uid);
 
   const successDeleteToast = () =>

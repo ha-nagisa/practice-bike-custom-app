@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ModalContext from '../context/modal';
 import { backfaceFixed } from '../utils/backfaceFixed';
 
-export default function PostDetailModal({ isModalOpen, setIsModalOpen }) {
+export default function PostDetailModal({ setIsModalOpen }) {
   const { modalInfo } = useContext(ModalContext);
 
   const closeModal = () => {
@@ -52,6 +52,5 @@ export default function PostDetailModal({ isModalOpen, setIsModalOpen }) {
 }
 
 PostDetailModal.propTypes = {
-  isModalOpen: PropTypes.bool.isRequired,
   setIsModalOpen: PropTypes.func.isRequired,
 };

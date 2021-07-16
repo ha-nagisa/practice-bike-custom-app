@@ -1,12 +1,9 @@
 /* eslint-disable no-nested-ternary */
-
 import { useContext, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 
 import Header from '../components/header';
 import Timeline from '../components/timeline';
 import Sidebar from '../components/sidebar';
-import useUser from '../hooks/use-user';
 import LoggedInUserContext from '../context/logged-in-user';
 import PostIcon from '../components/postIcon';
 import TimelineAll from '../components/timeLineAll';
@@ -16,11 +13,10 @@ import PostEditModal from '../components/postEditModal';
 import PostDetailModal from '../components/postDetailModal';
 import PostErrorModal from '../components/postErrorModal';
 import MobileSidebar from '../components/sidebar/mobile-sidebar';
-import { getSuggestedProfiles, getUserPhotosByUserId } from '../services/firebase';
+import { getSuggestedProfiles } from '../services/firebase';
 import SuggestionsProfilesContext from '../context/suggestions-profiles';
-import UserPhotosContext from '../context/userPhotos';
 
-export default function Dashboard({ user: loggedInUser }) {
+export default function Dashboard() {
   const [postConditional, setPostConditional] = useState('all');
   const { user: activeUser } = useContext(LoggedInUserContext);
   const { modalInfo, isModalOpen, setIsModalOpen } = useContext(ModalContext);
@@ -40,7 +36,7 @@ export default function Dashboard({ user: loggedInUser }) {
     if (activeUser?.userId) {
       suggestedProfiles();
     }
-  }, [activeUser?.userId]);
+  }, [activeUser?.userId, activeUser?.following, activeUser?.maker]);
 
   return (
     <SuggestionsProfilesContext.Provider value={{ profiles, setProfiles }}>
@@ -110,7 +106,3 @@ export default function Dashboard({ user: loggedInUser }) {
     </SuggestionsProfilesContext.Provider>
   );
 }
-
-Dashboard.propTypes = {
-  user: PropTypes.object.isRequired,
-};

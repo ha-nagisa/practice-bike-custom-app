@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import PropTypes from 'prop-types';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import ModalContext from '../../context/modal';
 import UserContext from '../../context/user';
 import { backfaceFixed } from '../../utils/backfaceFixed';
 
 export default function Header({ content, postUser, isProfilePage }) {
-  const { modalInfo, setModalInfo, isModalOpen, setIsModalOpen } = useContext(ModalContext);
+  const { setModalInfo, isModalOpen, setIsModalOpen } = useContext(ModalContext);
   const { user: loggedInUser } = useContext(UserContext);
   const isPostUser = loggedInUser.displayName === content.username;
 

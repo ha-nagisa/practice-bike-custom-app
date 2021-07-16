@@ -3,7 +3,7 @@
 /* eslint-disable no-nested-ternary */
 
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { toast, Toaster } from 'react-hot-toast';
 
 import FirebaseContext from '../context/firebase';

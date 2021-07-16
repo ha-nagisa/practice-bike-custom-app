@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export default function Footer({ description, category, title }) {
+export default function Footer({ category, title }) {
   return (
     <div className="p-4 pt-2 pb-1">
       <p className="italic font-bold text-lg">{title.length > 40 ? `${title.substr(0, 40)}...` : title}</p>
@@ -12,7 +12,6 @@ export default function Footer({ description, category, title }) {
 }
 
 Footer.propTypes = {
-  description: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
 };
