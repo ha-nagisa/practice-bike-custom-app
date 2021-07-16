@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable no-nested-ternary */
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
@@ -30,6 +30,17 @@ export default function Header({
   const [isFollowingProfile, setIsFollowingProfile] = useState(null);
   const activeBtnFollow = activeUser?.username && activeUser?.username !== profileUsername;
 
+  useEffect(() => {
+    const isLoggedInUserFollowingProfile = async () => {
+      const isFollowing = await isUserFollowingProfile(activeUser.username, profileUserId);
+      setIsFollowingProfile(!!isFollowing);
+    };
+
+    if (activeUser?.username && profileUserId) {
+      isLoggedInUserFollowingProfile();
+    }
+  }, [activeUser?.username, profileUserId, profileUsername]);
+
   const handleToggleFollow = async () => {
     setIsFollowingProfile((isFollowingProfile) => !isFollowingProfile);
     setFollowerCount({
@@ -41,17 +52,6 @@ export default function Header({
       following: isFollowingProfile ? user.following.filter((uid) => uid !== profileUserId) : [...user.following, profileUserId],
     }));
   };
-
-  useEffect(() => {
-    const isLoggedInUserFollowingProfile = async () => {
-      const isFollowing = await isUserFollowingProfile(activeUser.username, profileUserId);
-      setIsFollowingProfile(!!isFollowing);
-    };
-
-    if (activeUser?.username && profileUserId) {
-      isLoggedInUserFollowingProfile();
-    }
-  }, [activeUser?.username, profileUserId]);
 
   const openFollowedModal = () => {
     backfaceFixed(true);

@@ -4,7 +4,6 @@ import { getPhotosFavorite } from '../services/firebase';
 
 export default function usePhotos(user) {
   const [photos, setPhotos] = useState(null);
-  const [displayPhotos, setDisplayPhotos] = useState(null);
   const { loggedInUserPhotos } = useContext(UserPhotosContext);
 
   useEffect(() => {
@@ -14,7 +13,7 @@ export default function usePhotos(user) {
 
         if (loggedInUserPhotos) {
           const favoritedPhotoInUserPhotos = favoritedPhotos.map((favaritedphoto) => {
-            const copyLoggedInUserPhotos = loggedInUserPhotos;
+            const copyLoggedInUserPhotos = [...loggedInUserPhotos];
             if (copyLoggedInUserPhotos && copyLoggedInUserPhotos.some((userPhoto) => userPhoto.docId === favaritedphoto.docId)) {
               return copyLoggedInUserPhotos.filter((userPhoto) => userPhoto.docId === favaritedphoto.docId)[0];
             }

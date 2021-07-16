@@ -22,7 +22,7 @@ export default function TimelineAll() {
       setLatestDoc(lastDoc);
       if (loggedInUserPhotos) {
         const nextPhotosInUserPhotos = nextPhotos.map((nextPhoto) => {
-          const copyLoggedInUserPhotos = loggedInUserPhotos;
+          const copyLoggedInUserPhotos = [...loggedInUserPhotos];
           if (copyLoggedInUserPhotos.length > 0 && copyLoggedInUserPhotos.some((userPhoto) => userPhoto.docId === nextPhoto.docId)) {
             return copyLoggedInUserPhotos.filter((userPhoto) => userPhoto.docId === nextPhoto.docId)[0];
           }

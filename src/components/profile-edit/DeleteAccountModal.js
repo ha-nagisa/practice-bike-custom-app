@@ -16,18 +16,16 @@ export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
     setIsDeleteAccountModalOpen(false);
   };
 
-  const deleteAccount = () => {
-    firebase
+  const deleteAccount = async () => {
+    await firebase
       .auth()
       .currentUser.delete()
       .then(() => {
-        console.log('成功');
         successDeleteToast();
         backfaceFixed(false);
         history.push(ROUTES.SIGN_UP);
       })
       .catch((error) => {
-        console.log('失敗');
         alert(error.message);
       });
   };

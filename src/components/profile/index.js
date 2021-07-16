@@ -3,14 +3,12 @@ import PropTypes from 'prop-types';
 import Header from './header';
 import Photos from './photos';
 import { getUserPhotosByUserId } from '../../services/firebase';
-import UserContext from '../../context/user';
 import UserPhotosContext from '../../context/userPhotos';
 import LoggedInUserContext from '../../context/logged-in-user';
 
 export default function Profile({ user, setIsOpenFollowingModal, setIsOpenFollowedModal }) {
   const { user: activeUser } = useContext(LoggedInUserContext);
   const { loggedInUserPhotos } = useContext(UserPhotosContext);
-  console.log(loggedInUserPhotos);
   const reducer = (state, newState) => ({ ...state, ...newState });
   const initialState = {
     profile: {},
@@ -30,6 +28,7 @@ export default function Profile({ user, setIsOpenFollowingModal, setIsOpenFollow
       dispatch({ profile: user, photosCollection: photos, followerCount: user.followers.length });
     }
     getProfileInfoAndPhotos();
+    console.log('こんにちは');
   }, [user.username, loggedInUserPhotos]);
 
   return (

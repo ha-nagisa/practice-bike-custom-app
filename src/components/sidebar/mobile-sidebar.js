@@ -1,6 +1,5 @@
-import React, { useContext, useState } from 'react';
-import LoggedInUserContext from '../../context/logged-in-user';
-import SuggestionsProfilesContext from '../../context/suggestions-profiles';
+import React, { useState } from 'react';
+
 import MobileSidebarSuggestions from './mobile-sidebar-suggestions';
 
 export default function MobileSidebar() {

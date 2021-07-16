@@ -1,20 +1,16 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/no-onchange */
 
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import ModalContext from '../context/modal';
 import FirebaseContext from '../context/firebase';
-import UserContext from '../context/user';
-import useUser from '../hooks/use-user';
 import UserPhotosContext from '../context/userPhotos';
 import { backfaceFixed } from '../utils/backfaceFixed';
-import { getUserPhotosByUserId } from '../services/firebase';
 
 export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
-  const { user: loggedInUser } = useContext(UserContext);
   const { loggedInUserPhotos, setLoggedInUserPhotos } = useContext(UserPhotosContext);
-  const { user } = useUser(loggedInUser?.uid);
+
   const { modalInfo } = useContext(ModalContext);
   const { firebase } = useContext(FirebaseContext);
 
@@ -27,18 +23,6 @@ export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
   const [previewWorkImageSrc, setPreviewWorkImageSrc] = useState(modalInfo.imageSrc ? modalInfo.imageSrc : null);
 
   const isInvalid = title === '' || description === '' || category === '' || workHours === '' || workMoney === '' || workImage === null;
-
-  useEffect(async () => {
-    async function getUserPhotosAll() {
-      const [userPhotos] = await getUserPhotosByUserId(user.uid);
-      [userPhotos].sort((a, b) => b.dateCreated - a.dateCreated);
-      setLoggedInUserPhotos(userPhotos);
-    }
-
-    if (user?.uid) {
-      await getUserPhotosAll();
-    }
-  }, [user?.uid]);
 
   const onChangeImageHandler = (e) => {
     if (e.target.files[0]) {

@@ -77,6 +77,9 @@ export async function updateLoggedInUserFollowing(
     .doc(loggedInUserDocId)
     .update({
       following: isFollowingProfile ? FieldValue.arrayRemove(profileId) : FieldValue.arrayUnion(profileId),
+    })
+    .catch((error) => {
+      alert(error.message);
     });
 }
 
@@ -91,6 +94,9 @@ export async function updateFollowedUserFollowers(
     .doc(profileDocId)
     .update({
       followers: isFollowingProfile ? FieldValue.arrayRemove(loggedInUserDocId) : FieldValue.arrayUnion(loggedInUserDocId),
+    })
+    .catch((error) => {
+      alert(error.message);
     });
 }
 
@@ -269,7 +275,7 @@ export async function getProfileFollowingUsers(following) {
 }
 
 export async function getProfileFollowedgUsers(followed) {
-  let users = null;
+  let users = [];
 
   if (followed.length > 0) {
     const result = await firebase

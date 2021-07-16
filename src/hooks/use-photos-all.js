@@ -14,7 +14,7 @@ export default function usePhotosAll(user) {
 
       if (loggedInUserPhotos) {
         const allPhotosInUserPhotos = allPhotos.map((allphoto) => {
-          const copyLoggedInUserPhotos = loggedInUserPhotos;
+          const copyLoggedInUserPhotos = [...loggedInUserPhotos];
           if (copyLoggedInUserPhotos.length > 0 && copyLoggedInUserPhotos.some((userPhoto) => userPhoto.docId === allphoto.docId)) {
             return copyLoggedInUserPhotos.filter((userPhoto) => userPhoto.docId === allphoto.docId)[0];
           }

@@ -5,12 +5,10 @@ import { updateLoggedInUserFollowing, updateFollowedUserFollowers, getUserByUser
 import LoggedInUserContext from '../../context/logged-in-user';
 
 export default function SuggestedProfile({ profileDocId, username, profileId, userId, loggedInUserDocId, profileImageUrl }) {
-  const [followed, setFollowed] = useState(false);
   const { user: activeUser, setActiveUser } = useContext(LoggedInUserContext);
   const isFollowing = activeUser.following.some((userId) => userId === profileId);
 
   async function handleFollowUser() {
-    setFollowed(true);
     await updateLoggedInUserFollowing(loggedInUserDocId, profileId, false);
     await updateFollowedUserFollowers(profileDocId, userId, false);
     const [user] = await getUserByUserId(userId);
@@ -18,7 +16,6 @@ export default function SuggestedProfile({ profileDocId, username, profileId, us
   }
 
   async function handleUnFollowUser() {
-    setFollowed(false);
     await updateLoggedInUserFollowing(loggedInUserDocId, profileId, true);
     await updateFollowedUserFollowers(profileDocId, userId, true);
     const [user] = await getUserByUserId(userId);
