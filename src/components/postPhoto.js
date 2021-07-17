@@ -18,7 +18,7 @@ export default function PostPhoto() {
   const [title, setTitle] = useState('');
   const [description, setDiscription] = useState('');
   const [category, setCategory] = useState('');
-  const [workHours, setWorkHours] = useState('');
+  const [workHours, setWorkHours] = useState('60分以内');
   const [workMoney, setWorkMoney] = useState(null);
   const [workImage, setWorkImage] = useState(null);
   const [previewWorkImageSrc, setPreviewWorkImageSrc] = useState('');
@@ -309,12 +309,12 @@ export default function PostPhoto() {
         <div className="flex items-center justify-center  md:gap-8 gap-4 pt-5 pb-5 mt-3 mb-3">
           <button
             type="submit"
-            className={`w-auto bg-logoColor-base  rounded-lg shadow-xl font-medium text-white px-4 py-2 hover:opacity-70 ${
-              isInvalid && 'opacity-50'
+            className={`w-auto bg-logoColor-base  rounded-lg shadow-xl font-medium text-white px-4 py-2 ${
+              isInvalid || isPosting ? 'opacity-50' : 'hover:opacity-70'
             }`}
-            disabled={isInvalid}
+            disabled={isInvalid || isPosting}
           >
-            {isPosting ? '...投稿中' : '投稿'}
+            {isPosting ? '投稿中...' : '投稿'}
           </button>
         </div>
       </form>

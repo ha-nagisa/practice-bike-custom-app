@@ -11,17 +11,20 @@ export default function Login() {
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState('');
+  const [isActioning, setIsActioning] = useState(false);
   const isInvalid = password === '' || emailAddress === '';
 
   const handleLogin = async (event) => {
     event.preventDefault();
-
+    setIsActioning(true);
     try {
       await firebase.auth().signInWithEmailAndPassword(emailAddress, password);
+      setIsActioning(false);
       history.push(ROUTES.DASHBOARD);
     } catch (error) {
       setEmailAddress('');
       setPassword('');
+      setIsActioning(false);
       setError(error.message);
     }
   };
@@ -33,7 +36,9 @@ export default function Login() {
   return (
     <div className="container flex mx-auto max-w-screen-lg items-center h-screen px-3 py-3 sm:py-0">
       <div className="hidden sm:flex w-1/2 shadow-lg">
-        <img src="/images/loginLogo.png" alt="Bun Bun BIKE" />
+        <div>
+          <img src="/images/loginLogo.png" alt="Bun Bun BIKE" />
+        </div>
       </div>
       <div className="flex flex-col w-full sm:w-1/2 sm:pt-harf sm:relative sm:border-0">
         <div className="flex flex-col items-center w-19/20 sm:w-4/5 bg-white p-4 mb-4 rounded mx-auto sm:mx-0 sm:absolute sm:top-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2 shadow-lg">
@@ -64,10 +69,10 @@ export default function Login() {
             <button
               disabled={isInvalid}
               type="submit"
-              className={`bg-logoColor-base text-white w-full rounded h-10 font-bold mb-2
-            ${isInvalid && 'opacity-50'}`}
+              className={`bg-logoColor-base border border-logoColor-base text-white w-full rounded h-10 font-bold mb-2
+              ${isInvalid || isActioning ? 'opacity-50 cursor-default' : 'hover:bg-white hover:text-logoColor-base'}`}
             >
-              Login
+              {isActioning ? '読み込み中...' : ' Login'}
             </button>
           </form>
           <p className="text-sm">
