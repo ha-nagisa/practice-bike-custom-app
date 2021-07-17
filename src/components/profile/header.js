@@ -1,10 +1,9 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable no-nested-ternary */
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
-import * as ROUTES from '../../constants/routes';
 import { isUserFollowingProfile, toggleFollow } from '../../services/firebase';
 import { backfaceFixed } from '../../utils/backfaceFixed';
 import LoggedInUserContext from '../../context/logged-in-user';
@@ -93,7 +92,7 @@ export default function Header({
                 </button>
               ) : (
                 <Link
-                  to={ROUTES.PROFILE_EDIT}
+                  to={`/p/${profileUsername}/edit`}
                   className="block border border-gray-500 bg-white font-bold text-sm rounded text-gray-500 w-full px-2 py-1 sm:mb-2 mb-0 hover:opacity-70 focus:outline-none"
                 >
                   プロフィールの編集

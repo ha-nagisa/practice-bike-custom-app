@@ -5,10 +5,11 @@ import UserContext from '../context/user';
 import * as ROUTES from '../constants/routes';
 import { DEFAULT_IMAGE_PATH } from '../constants/paths';
 import useUser from '../hooks/use-user';
+import LoggedInUserContext from '../context/logged-in-user';
 
 export default function Header() {
   const { user: loggedInUser } = useContext(UserContext);
-  const { user } = useUser(loggedInUser?.uid);
+  const { user: activeUser } = useContext(LoggedInUserContext);
   const { firebase } = useContext(FirebaseContext);
   const history = useHistory();
 
@@ -55,13 +56,13 @@ export default function Header() {
                     />
                   </svg>
                 </button>
-                {user && (
+                {activeUser && (
                   <div className="flex items-center cursor-pointer">
-                    <Link to={`/p/${user?.username}`}>
+                    <Link to={`/p/${activeUser?.username}`}>
                       <img
-                        className="object-cover w-8 h-8 rounded-full flex"
-                        src={user.bikeImageUrl}
-                        alt={`${user?.username} profile`}
+                        className="object-cover w-8 h-8 rounded-full flex bg-white"
+                        src={activeUser.bikeImageUrl ? activeUser.bikeImageUrl : '/images/avatars/bikeDefault.png'}
+                        alt={`${activeUser?.username} profile`}
                         onError={(e) => {
                           e.target.src = DEFAULT_IMAGE_PATH;
                         }}
