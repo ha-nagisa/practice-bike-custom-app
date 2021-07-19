@@ -4,7 +4,6 @@ import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
-import * as ROUTES from '../../constants/routes';
 import { isUserFollowingProfile, toggleFollow } from '../../services/firebase';
 import { backfaceFixed } from '../../utils/backfaceFixed';
 import LoggedInUserContext from '../../context/logged-in-user';
@@ -26,17 +25,9 @@ export default function Header({
     username: profileUsername,
   },
 }) {
-  const { user: activeUser } = useContext(LoggedInUserContext);
+  const { user: activeUser, setActiveUser } = useContext(LoggedInUserContext);
   const [isFollowingProfile, setIsFollowingProfile] = useState(null);
   const activeBtnFollow = activeUser?.username && activeUser?.username !== profileUsername;
-
-  const handleToggleFollow = async () => {
-    setIsFollowingProfile((isFollowingProfile) => !isFollowingProfile);
-    setFollowerCount({
-      followerCount: isFollowingProfile ? followerCount - 1 : followerCount + 1,
-    });
-    await toggleFollow(isFollowingProfile, activeUser.docId, profileDocId, profileUserId, activeUser.userId);
-  };
 
   useEffect(() => {
     const isLoggedInUserFollowingProfile = async () => {
@@ -47,7 +38,19 @@ export default function Header({
     if (activeUser?.username && profileUserId) {
       isLoggedInUserFollowingProfile();
     }
-  }, [activeUser?.username, profileUserId]);
+  }, [activeUser?.username, profileUserId, profileUsername]);
+
+  const handleToggleFollow = async () => {
+    setIsFollowingProfile((isFollowingProfile) => !isFollowingProfile);
+    setFollowerCount({
+      followerCount: isFollowingProfile ? followerCount - 1 : followerCount + 1,
+    });
+    await toggleFollow(isFollowingProfile, activeUser.docId, profileDocId, profileUserId, activeUser.userId);
+    setActiveUser((user) => ({
+      ...user,
+      following: isFollowingProfile ? user.following.filter((uid) => uid !== profileUserId) : [...user.following, profileUserId],
+    }));
+  };
 
   const openFollowedModal = () => {
     backfaceFixed(true);
@@ -89,7 +92,7 @@ export default function Header({
                 </button>
               ) : (
                 <Link
-                  to={ROUTES.PROFILE_EDIT}
+                  to={`/p/${profileUsername}/edit`}
                   className="block border border-gray-500 bg-white font-bold text-sm rounded text-gray-500 w-full px-2 py-1 sm:mb-2 mb-0 hover:opacity-70 focus:outline-none"
                 >
                   プロフィールの編集

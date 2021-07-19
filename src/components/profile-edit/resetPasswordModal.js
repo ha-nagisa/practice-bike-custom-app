@@ -6,7 +6,7 @@ import { backfaceFixed } from '../../utils/backfaceFixed';
 export default function ResetPasswordModal({ setIsResetModalOpen, resetEmail, setResetEmail, successResetToast }) {
   const { firebase } = useContext(FirebaseContext);
 
-  const sendResetEmail = async (e) => {
+  const sendResetEmail = async () => {
     await firebase
       .auth()
       .sendPasswordResetEmail(resetEmail)

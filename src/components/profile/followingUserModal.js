@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { backfaceFixed } from '../../utils/backfaceFixed';
 import { getProfileFollowingUsers } from '../../services/firebase';
 
@@ -8,17 +8,16 @@ export default function FollowingUserModal({ user, setIsOpenFollowingModal }) {
   const history = useHistory();
   const [followingUsers, setFollowingUsers] = useState(null);
 
-  useEffect(async () => {
+  useEffect(() => {
     const getFollowingUsers = async () => {
       const users = await getProfileFollowingUsers(user?.following);
-      return users;
+      setFollowingUsers(users);
     };
 
     if (user?.userId) {
-      const response = await getFollowingUsers();
-      setFollowingUsers(response);
+      getFollowingUsers();
     }
-  }, [user?.userId]);
+  }, [user?.userId, user?.following]);
 
   const closeModal = () => {
     backfaceFixed(false);

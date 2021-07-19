@@ -5,9 +5,15 @@ import FirebaseContext from '../../context/firebase';
 import { backfaceFixed } from '../../utils/backfaceFixed';
 import * as ROUTES from '../../constants/routes';
 import AccountDeleteToastContext from '../../context/accountDeleteToast';
+import LoggedInUserContext from '../../context/logged-in-user';
+import UserPhotosContext from '../../context/userPhotos';
 
 export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
-  const { firebase } = useContext(FirebaseContext);
+  const { firebase, FieldValue } = useContext(FirebaseContext);
+  const { user: activeUser } = useContext(LoggedInUserContext);
+  const { loggedInUserPhotos } = useContext(UserPhotosContext);
+  console.log(activeUser);
+  console.log(loggedInUserPhotos);
   const history = useHistory();
   const { successDeleteToast } = useContext(AccountDeleteToastContext);
 
@@ -16,18 +22,87 @@ export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
     setIsDeleteAccountModalOpen(false);
   };
 
-  const deleteAccount = () => {
-    firebase
+  const deleteAccount = async () => {
+    await firebase
+      .firestore()
+      .collection('users')
+      .where('following', 'in', [activeUser.userId])
+      .get()
+      .then((docs) => {
+        Promise.all(
+          docs.map((doc) => {
+            firebase
+              .firestore()
+              .collection('users')
+              .doc(doc.id)
+              .update({
+                following: FieldValue.arrayRemove(activeUser.userId),
+              });
+            return doc;
+          })
+        );
+      });
+
+    await firebase
+      .firestore()
+      .collection('users')
+      .where('followers', 'in', [activeUser.userId])
+      .get()
+      .then((docs) => {
+        Promise.all(
+          docs.map((doc) => {
+            firebase
+              .firestore()
+              .collection('users')
+              .doc(doc.id)
+              .update({
+                followers: FieldValue.arrayRemove(activeUser.userId),
+              });
+            return doc;
+          })
+        );
+      });
+
+    await firebase
+      .firestore()
+      .collection('photos')
+      .where('likes', 'in', [activeUser.userId])
+      .get()
+      .then((docs) => {
+        Promise.all(
+          docs.map((doc) => {
+            firebase
+              .firestore()
+              .collection('photos')
+              .doc(doc.id)
+              .update({
+                likes: FieldValue.arrayRemove(activeUser.userId),
+              });
+            return doc;
+          })
+        );
+      });
+
+    await firebase.firestore().collection('users').doc(activeUser.docId).delete();
+
+    if (loggedInUserPhotos) {
+      await Promise.all(
+        loggedInUserPhotos.map((photo) => {
+          firebase.firestore().collection('photos').doc(photo.docId).delete();
+          return photo;
+        })
+      );
+    }
+
+    await firebase
       .auth()
       .currentUser.delete()
       .then(() => {
-        console.log('成功');
         successDeleteToast();
         backfaceFixed(false);
         history.push(ROUTES.SIGN_UP);
       })
       .catch((error) => {
-        console.log('失敗');
         alert(error.message);
       });
   };

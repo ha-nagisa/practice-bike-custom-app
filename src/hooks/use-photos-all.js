@@ -4,15 +4,17 @@ import { getPhotosAll } from '../services/firebase';
 
 export default function usePhotosAll(user) {
   const [photos, setPhotos] = useState(null);
-  const { loggedInUserPhotos, setLoggedInUserPhotos } = useContext(UserPhotosContext);
+  const { loggedInUserPhotos } = useContext(UserPhotosContext);
+  const [latestDoc, setLatestDoc] = useState(null);
 
   useEffect(() => {
     async function getTimelinePhotosAll() {
-      const allPhotos = await getPhotosAll(user?.userId, user?.following);
+      const { photosWithUserDetails: allPhotos, lastDoc } = await getPhotosAll(user?.userId, latestDoc);
+      setLatestDoc(lastDoc);
 
       if (loggedInUserPhotos) {
         const allPhotosInUserPhotos = allPhotos.map((allphoto) => {
-          const copyLoggedInUserPhotos = loggedInUserPhotos;
+          const copyLoggedInUserPhotos = [...loggedInUserPhotos];
           if (copyLoggedInUserPhotos.length > 0 && copyLoggedInUserPhotos.some((userPhoto) => userPhoto.docId === allphoto.docId)) {
             return copyLoggedInUserPhotos.filter((userPhoto) => userPhoto.docId === allphoto.docId)[0];
           }
@@ -26,9 +28,10 @@ export default function usePhotosAll(user) {
       allPhotos.sort((a, b) => b.dateCreated - a.dateCreated);
       setPhotos(allPhotos);
     }
-
-    getTimelinePhotosAll();
+    if (latestDoc === null) {
+      getTimelinePhotosAll();
+    }
   }, [user?.userId, loggedInUserPhotos]);
 
-  return { photos };
+  return { photos, setPhotos, latestDoc, setLatestDoc };
 }

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
 import * as ROUTES from './constants/routes';
@@ -23,11 +23,10 @@ const Post = lazy(() => import('./pages/post'));
 const NotFound = lazy(() => import('./pages/not-found'));
 
 export default function App() {
-  const { user } = useAuthListener();
+  const { user, setUser } = useAuthListener();
   const [modalInfo, setModalInfo] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { loggedInUserPhotos, setLoggedInUserPhotos } = useActiveUserPhotos(user?.uid);
-  console.log(loggedInUserPhotos);
   const { user: activeUser, setActiveUser } = useUser(user?.uid);
 
   const successDeleteToast = () =>
@@ -45,7 +44,7 @@ export default function App() {
     });
 
   return (
-    <UserContext.Provider value={{ user }}>
+    <UserContext.Provider value={{ user, setUser }}>
       <LoggedInUserContext.Provider value={{ user: activeUser, setActiveUser }}>
         <ModalContext.Provider value={{ modalInfo, setModalInfo, isModalOpen, setIsModalOpen }}>
           <UserPhotosContext.Provider value={{ loggedInUserPhotos, setLoggedInUserPhotos }}>

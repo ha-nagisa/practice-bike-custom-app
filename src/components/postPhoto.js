@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/no-onchange */
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import FirebaseContext from '../context/firebase';
 import UserContext from '../context/user';
@@ -18,7 +18,7 @@ export default function PostPhoto() {
   const [title, setTitle] = useState('');
   const [description, setDiscription] = useState('');
   const [category, setCategory] = useState('');
-  const [workHours, setWorkHours] = useState('');
+  const [workHours, setWorkHours] = useState('60分以内');
   const [workMoney, setWorkMoney] = useState(null);
   const [workImage, setWorkImage] = useState(null);
   const [previewWorkImageSrc, setPreviewWorkImageSrc] = useState('');
@@ -53,22 +53,46 @@ export default function PostPhoto() {
         await firebase.storage().ref(`posts/${fileName}`).put(workImage);
         workImageUrl = await firebase.storage().ref('posts').child(fileName).getDownloadURL();
       }
-      await firebase.firestore().collection('photos').add({
-        title,
-        userId: user.userId,
-        description,
-        imageSrc: workImageUrl,
-        Maker: user.carModel,
-        carModel: user.maker,
-        likes: [],
-        comments: [],
-        category,
-        workMoney,
-        workHours,
-        dateCreated: Date.now(),
-      });
+      await firebase
+        .firestore()
+        .collection('photos')
+        .add({
+          title,
+          userId: user.userId,
+          description,
+          imageSrc: workImageUrl,
+          Maker: user.carModel,
+          carModel: user.maker,
+          likes: [],
+          comments: [],
+          category,
+          workMoney,
+          workHours,
+          dateCreated: Date.now(),
+        })
+        .then((doc) => {
+          setLoggedInUserPhotos((photos) => [
+            {
+              title,
+              userId: user.userId,
+              description,
+              imageSrc: workImageUrl,
+              Maker: user.carModel,
+              carModel: user.maker,
+              likes: [],
+              comments: [],
+              category,
+              workMoney,
+              workHours,
+              dateCreated: Date.now(),
+              docId: doc.id,
+              userLikedPhoto: false,
+              username: user.username,
+            },
+            ...photos,
+          ]);
+        });
 
-      setLoggedInUserPhotos((photos) => [...photos]);
       history.push(ROUTES.DASHBOARD);
     } catch (error) {
       alert(error.message);
@@ -285,12 +309,12 @@ export default function PostPhoto() {
         <div className="flex items-center justify-center  md:gap-8 gap-4 pt-5 pb-5 mt-3 mb-3">
           <button
             type="submit"
-            className={`w-auto bg-logoColor-base  rounded-lg shadow-xl font-medium text-white px-4 py-2 hover:opacity-70 ${
-              isInvalid && 'opacity-50'
+            className={`w-auto bg-logoColor-base  rounded-lg shadow-xl font-medium text-white px-4 py-2 ${
+              isInvalid || isPosting ? 'opacity-50' : 'hover:opacity-70'
             }`}
-            disabled={isInvalid}
+            disabled={isInvalid || isPosting}
           >
-            {isPosting ? '...投稿中' : '投稿'}
+            {isPosting ? '投稿中...' : '投稿'}
           </button>
         </div>
       </form>

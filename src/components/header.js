@@ -5,10 +5,11 @@ import UserContext from '../context/user';
 import * as ROUTES from '../constants/routes';
 import { DEFAULT_IMAGE_PATH } from '../constants/paths';
 import useUser from '../hooks/use-user';
+import LoggedInUserContext from '../context/logged-in-user';
 
 export default function Header() {
   const { user: loggedInUser } = useContext(UserContext);
-  const { user } = useUser(loggedInUser?.uid);
+  const { user: activeUser } = useContext(LoggedInUserContext);
   const { firebase } = useContext(FirebaseContext);
   const history = useHistory();
 
@@ -18,7 +19,7 @@ export default function Header() {
         <div className="flex justify-between h-full">
           <div className="text-gray-700 text-center flex items-center align-items cursor-pointer">
             <h1 className="flex justify-center w-full">
-              <Link to={ROUTES.DASHBOARD} aria-label="Instagram logo">
+              <Link to={ROUTES.DASHBOARD} aria-label="Bun Bun BIKE logo">
                 <img src="/images/smLoginLogo.png" alt="bun bun bike" width="200px" className="" />
               </Link>
             </h1>
@@ -55,13 +56,13 @@ export default function Header() {
                     />
                   </svg>
                 </button>
-                {user && (
+                {activeUser && (
                   <div className="flex items-center cursor-pointer">
-                    <Link to={`/p/${user?.username}`}>
+                    <Link to={`/p/${activeUser?.username}`}>
                       <img
-                        className="object-cover w-8 h-8 rounded-full flex"
-                        src={!user.bikeImageUrl ? `/images/avatars/default.png` : user.bikeImageUrl}
-                        alt={`${user?.username} profile`}
+                        className="object-cover w-8 h-8 rounded-full flex bg-white"
+                        src={activeUser.bikeImageUrl ? activeUser.bikeImageUrl : '/images/avatars/bikeDefault.png'}
+                        alt={`${activeUser?.username} profile`}
                         onError={(e) => {
                           e.target.src = DEFAULT_IMAGE_PATH;
                         }}
@@ -73,12 +74,12 @@ export default function Header() {
             ) : (
               <>
                 <Link to={ROUTES.LOGIN}>
-                  <button type="button" className="bg-logoColor-base font-bold text-sm rounded text-white w-20 h-8">
+                  <button type="button" className="bg-blue-medium font-bold text-sm rounded text-white w-20 h-8">
                     Log In
                   </button>
                 </Link>
                 <Link to={ROUTES.SIGN_UP}>
-                  <button type="button" className="font-bold text-sm rounded text-logoColor-base w-20 h-8">
+                  <button type="button" className="font-bold text-sm rounded text-blue-medium w-20 h-8">
                     Sign Up
                   </button>
                 </Link>

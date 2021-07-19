@@ -3,7 +3,7 @@
 /* eslint-disable no-nested-ternary */
 
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { toast, Toaster } from 'react-hot-toast';
 
 import FirebaseContext from '../context/firebase';
@@ -13,6 +13,7 @@ import * as ROUTES from '../constants/routes';
 import ResetPasswordModal from '../components/profile-edit/resetPasswordModal';
 import { backfaceFixed } from '../utils/backfaceFixed';
 import DeleteAccountModal from '../components/profile-edit/DeleteAccountModal';
+import { doesUsernameExist } from '../services/firebase';
 
 export default function ProfileEdit() {
   const location = useLocation();
@@ -98,15 +99,17 @@ export default function ProfileEdit() {
     event.preventDefault();
     setIsActioning(true);
     const isLoggedInUser = location.pathname === `/p/${activeUser?.username}/edit`;
-
     if (isLoggedInUser) {
+      const usernameExists = await doesUsernameExist(username);
       try {
+        if (usernameExists) {
+          throw new Error('既に入力したユーザーネームを持ったユーザーが存在します。ユーザーネームを変更してください。');
+        }
         await firebase
           .auth()
           .currentUser.updateEmail(emailAddress)
-          .then(() => console.log('成功3'))
           .catch((error) => {
-            setErrorText(error.message);
+            throw new Error(error.message);
           });
 
         if (!errorText) {
@@ -132,8 +135,9 @@ export default function ProfileEdit() {
                 maker,
                 emailAddress: emailAddress.toLowerCase(),
               })
-              .then(() => console.log('成功1'))
-              .catch((error) => console.log(error.message));
+              .catch((error) => {
+                throw new Error(error.message);
+              });
 
             await firebase
               .auth()
@@ -141,9 +145,8 @@ export default function ProfileEdit() {
                 displayName: username.toLowerCase(),
                 photoURL: url,
               })
-              .then(() => console.log('成功2'))
               .catch((error) => {
-                setErrorText(error.message);
+                throw new Error(error.message);
               });
 
             setActiveUser((prev) => ({
@@ -167,17 +170,17 @@ export default function ProfileEdit() {
                 maker,
                 emailAddress: emailAddress.toLowerCase(),
               })
-              .then(() => console.log('成功1'))
-              .catch((error) => console.log(error.message));
+              .catch((error) => {
+                throw new Error(error.message);
+              });
 
             await firebase
               .auth()
               .currentUser.updateProfile({
                 displayName: username.toLowerCase(),
               })
-              .then(() => console.log('成功2'))
               .catch((error) => {
-                setErrorText(error.message);
+                throw new Error(error.message);
               });
 
             setActiveUser((prev) => ({
@@ -539,7 +542,7 @@ export default function ProfileEdit() {
                     disabled={isInvalid}
                   >
                     {isActioning ? (
-                      '送信中...'
+                      '更新中...'
                     ) : (
                       <>
                         {' '}

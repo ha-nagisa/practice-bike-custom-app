@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import Slider from 'react-slick';
 
 import 'slick-carousel/slick/slick.css';
@@ -16,28 +16,31 @@ export default function MobileSidebarSuggestions() {
   const { profiles } = useContext(SuggestionsProfilesContext);
   const { user } = useContext(LoggedInUserContext);
 
-  const settings = {
-    infinite: true,
-    speed: 500,
-    slidesToShow: 4.5,
-    slidesToScroll: 2,
-    responsive: [
-      {
-        breakpoint: 780,
-        settings: {
-          slidesToShow: 3.5,
-          slidesToScroll: 2,
+  const settings = useMemo(
+    () => ({
+      infinite: true,
+      speed: 500,
+      slidesToShow: 4.5,
+      slidesToScroll: 2,
+      responsive: [
+        {
+          breakpoint: 780,
+          settings: {
+            slidesToShow: 3.5,
+            slidesToScroll: 2,
+          },
         },
-      },
-      {
-        breakpoint: 540,
-        settings: {
-          slidesToShow: 2.5,
-          slidesToScroll: 2,
+        {
+          breakpoint: 540,
+          settings: {
+            slidesToShow: 2.5,
+            slidesToScroll: 2,
+          },
         },
-      },
-    ],
-  };
+      ],
+    }),
+    []
+  );
 
   // おすすめのユーザーが少ない場合にスライドのレイアウト崩れを防ぐための真偽値
   const { width } = useWindowDimensions();
@@ -51,7 +54,7 @@ export default function MobileSidebarSuggestions() {
     } else if (width < 540) {
       setIsSliderOn(settings.responsive[1].settings.slidesToShow < profiles?.length);
     }
-  }, [width]);
+  }, [width, profiles, settings]);
 
   return !profiles ? (
     <Skeleton count={1} height={150} className="mt-5" />

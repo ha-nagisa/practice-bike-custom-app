@@ -1,20 +1,16 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/no-onchange */
 
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import ModalContext from '../context/modal';
 import FirebaseContext from '../context/firebase';
-import UserContext from '../context/user';
-import useUser from '../hooks/use-user';
 import UserPhotosContext from '../context/userPhotos';
 import { backfaceFixed } from '../utils/backfaceFixed';
-import { getUserPhotosByUserId } from '../services/firebase';
 
 export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
-  const { user: loggedInUser } = useContext(UserContext);
   const { loggedInUserPhotos, setLoggedInUserPhotos } = useContext(UserPhotosContext);
-  const { user } = useUser(loggedInUser?.uid);
+
   const { modalInfo } = useContext(ModalContext);
   const { firebase } = useContext(FirebaseContext);
 
@@ -25,20 +21,9 @@ export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
   const [workMoney, setWorkMoney] = useState(modalInfo.workMoney ? modalInfo.workMoney : null);
   const [workImage, setWorkImage] = useState(modalInfo.imageSrc ? modalInfo.imageSrc : null);
   const [previewWorkImageSrc, setPreviewWorkImageSrc] = useState(modalInfo.imageSrc ? modalInfo.imageSrc : null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isInvalid = title === '' || description === '' || category === '' || workHours === '' || workMoney === '' || workImage === null;
-
-  useEffect(async () => {
-    async function getUserPhotosAll() {
-      const [userPhotos] = await getUserPhotosByUserId(user.uid);
-      [userPhotos].sort((a, b) => b.dateCreated - a.dateCreated);
-      setLoggedInUserPhotos(userPhotos);
-    }
-
-    if (user?.uid) {
-      await getUserPhotosAll();
-    }
-  }, [user?.uid]);
 
   const onChangeImageHandler = (e) => {
     if (e.target.files[0]) {
@@ -55,6 +40,7 @@ export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
   const handleChangePost = async (event) => {
     event.preventDefault();
     try {
+      setIsLoading(true);
       let workImageUrl = modalInfo.imageSrc;
       if (workImage && workImage !== modalInfo.imageSrc) {
         const S = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -67,7 +53,7 @@ export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
         workImageUrl = await firebase.storage().ref('posts').child(fileName).getDownloadURL();
       }
 
-      firebase.firestore().collection('photos').doc(modalInfo.docId).update({
+      await firebase.firestore().collection('photos').doc(modalInfo.docId).update({
         title,
         description,
         imageSrc: workImageUrl,
@@ -91,7 +77,7 @@ export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
         });
         setLoggedInUserPhotos(updatedLoggedInUserPhotos);
       }
-
+      setIsLoading(false);
       setIsModalOpen(!isModalOpen);
       backfaceFixed(false);
     } catch (error) {
@@ -323,12 +309,12 @@ export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
                 </button>
                 <button
                   type="submit"
-                  className={`w-auto bg-logoColor-base rounded-lg shadow-xl font-medium text-white px-4 py-2 hover:opacity-70 ${
-                    isInvalid && 'opacity-50'
+                  className={`w-auto bg-logoColor-base rounded-lg shadow-xl font-medium text-white px-4 py-2  ${
+                    isInvalid || isLoading ? 'opacity-50' : 'hover:opacity-70'
                   }`}
-                  disabled={isInvalid}
+                  disabled={isInvalid || isLoading}
                 >
-                  更新
+                  {isLoading ? '更新中...' : '更新'}
                 </button>
               </div>
             </form>

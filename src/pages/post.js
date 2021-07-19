@@ -9,7 +9,7 @@ export default function Post() {
   const { user: loggedInUser } = useAuthListener();
   const { user, setActiveUser } = useUser(loggedInUser.uid);
   useEffect(() => {
-    document.title = 'POST | Instagram';
+    document.title = 'POST | Bun Bun BIKE';
   }, []);
 
   return (

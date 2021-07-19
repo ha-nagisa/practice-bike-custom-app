@@ -9,12 +9,11 @@ export default function usePhotos(user) {
   useEffect(() => {
     async function getTimelinePhotosFavorite() {
       if (user?.likes?.length > 0) {
-        const favoritedPhotos = await getPhotosFavorite(user.userId, user.likes);
+        const favoritedPhotos = await getPhotosFavorite(user?.userId, user.likes);
 
         if (loggedInUserPhotos) {
           const favoritedPhotoInUserPhotos = favoritedPhotos.map((favaritedphoto) => {
-            const copyLoggedInUserPhotos = loggedInUserPhotos;
-            console.log(copyLoggedInUserPhotos);
+            const copyLoggedInUserPhotos = [...loggedInUserPhotos];
             if (copyLoggedInUserPhotos && copyLoggedInUserPhotos.some((userPhoto) => userPhoto.docId === favaritedphoto.docId)) {
               return copyLoggedInUserPhotos.filter((userPhoto) => userPhoto.docId === favaritedphoto.docId)[0];
             }

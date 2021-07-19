@@ -3,14 +3,15 @@
 
 import { useState, useContext, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
 import FirebaseContext from '../context/firebase';
 import * as ROUTES from '../constants/routes';
-import { doesUsernameExist } from '../services/firebase';
+import { doesUsernameExist, getUserByUserId } from '../services/firebase';
+import LoggedInUserContext from '../context/logged-in-user';
 
 export default function SignUp() {
   const history = useHistory();
   const { firebase } = useContext(FirebaseContext);
+  const { setActiveUser } = useContext(LoggedInUserContext);
 
   const [username, setUsername] = useState('');
   const [bikeImage, setBikeImage] = useState('');
@@ -19,9 +20,10 @@ export default function SignUp() {
   const [carModel, setCarModel] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
-
+  const [isActioning, setIsActioning] = useState(false);
   const [error, setError] = useState('');
-  const isInvalid = password === '' || emailAddress === '' || username === '' || bikeImage === '' || maker === '' || carModel === '';
+  const isInvalid =
+    password === '' || emailAddress === '' || username === '' || bikeImage === '' || maker === '' || carModel === '' || password.length < 6;
 
   const onChangeImageHandler = (e) => {
     if (e.target.files[0]) {
@@ -37,7 +39,7 @@ export default function SignUp() {
 
   const handleSignUp = async (event) => {
     event.preventDefault();
-
+    setIsActioning(true);
     const usernameExists = await doesUsernameExist(username);
     if (!usernameExists) {
       try {
@@ -73,6 +75,10 @@ export default function SignUp() {
           dateCreated: Date.now(),
         });
 
+        const [user] = await getUserByUserId(createdUserResult.user.uid);
+        setActiveUser(user || {});
+
+        setIsActioning(false);
         history.push(ROUTES.DASHBOARD);
       } catch (error) {
         setBikeImage('');
@@ -81,10 +87,12 @@ export default function SignUp() {
         setEmailAddress('');
         setPassword('');
         setError(error.message);
+        setIsActioning(false);
       }
     } else {
       setUsername('');
-      setError('That username is already taken, please try another.');
+      setError('既に入力したユーザーネームを持ったユーザーが存在します。ユーザーネームを変更してください。');
+      setIsActioning(false);
     }
   };
 
@@ -95,7 +103,9 @@ export default function SignUp() {
   return (
     <div className="container flex mx-auto max-w-screen-lg items-center h-screen px-3 py-3 sm:py-0 ">
       <div className="hidden sm:flex w-1/2 shadow-lg">
-        <img src="/images/loginLogo.png" alt="Bun Bun BIKE" />
+        <div>
+          <img src="/images/loginLogo.png" alt="Bun Bun BIKE" />
+        </div>
       </div>
       <div className="flex flex-col w-full sm:w-1/2 sm:pt-harf sm:relative sm:border-0">
         <div className="flex flex-col items-center sm:w-4/5 bg-white p-4 mb-4 rounded mx-auto sm:mx-0 sm:absolute sm:top-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2 shadow-lg">
@@ -362,21 +372,28 @@ export default function SignUp() {
               onChange={({ target }) => setEmailAddress(target.value)}
               value={emailAddress}
             />
-            <input
-              aria-label="Enter your password"
-              type="password"
-              placeholder="パスワード"
-              className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border-2 border-gray-primary focus:outline-none focus:ring-2 focus:ring-logoColor-light rounded mb-4 focus:border-transparent"
-              onChange={({ target }) => setPassword(target.value)}
-              value={password}
-            />
+            <div className="mb-4 mr-3">
+              <input
+                aria-label="Enter your password"
+                type="password"
+                placeholder="パスワード"
+                className="text-sm text-gray-base w-full py-5 px-4 h-2 border-2 border-gray-primary focus:outline-none focus:ring-2 focus:ring-logoColor-light rounded focus:border-transparent"
+                onChange={({ target }) => {
+                  setPassword(target.value);
+                }}
+                value={password}
+              />
+              {password.length > 0 && password.length < 6 ? (
+                <p className="text-xs text-red-primary mt-1">英数字で6文字以上入力してください。</p>
+              ) : null}
+            </div>
             <button
-              disabled={isInvalid}
+              disabled={isInvalid || isActioning}
               type="submit"
-              className={`bg-logoColor-base text-white w-full rounded h-10 font-bold mb-2
-            ${isInvalid && 'opacity-50'}`}
+              className={`bg-logoColor-base border border-logoColor-base text-white w-full rounded h-10 font-bold mb-2
+            ${isInvalid || isActioning ? 'opacity-50 cursor-default' : 'hover:bg-white hover:text-logoColor-base'}`}
             >
-              Sign Up
+              {isActioning ? '読み込み中...' : 'Sign Up'}
             </button>
           </form>
           <p className="text-sm">
