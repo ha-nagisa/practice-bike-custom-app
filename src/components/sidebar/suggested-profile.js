@@ -6,7 +6,6 @@ import LoggedInUserContext from '../../context/logged-in-user';
 
 export default function SuggestedProfile({ profileDocId, username, profileId, userId, loggedInUserDocId, profileImageUrl }) {
   const { user: activeUser, setActiveUser } = useContext(LoggedInUserContext);
-  console.log(activeUser);
   const isFollowing =
     activeUser.following && activeUser.following !== undefined ? activeUser.following.some((userId) => userId === profileId) : false;
 

@@ -1,11 +1,13 @@
 import { firebase, FieldValue } from '../lib/firebase';
 
+// ユーザーネームを持ったユーザーが存在するかをチェック
 export async function doesUsernameExist(username) {
   const result = await firebase.firestore().collection('users').where('username', '==', username).get();
 
   return result.docs.length > 0;
 }
 
+// ユーザーネームによってuserのドキュメントを取得
 export async function getUserByUsername(username) {
   const result = await firebase.firestore().collection('users').where('username', '==', username).get();
 
@@ -15,7 +17,7 @@ export async function getUserByUsername(username) {
   }));
 }
 
-// get user from the firestore where userId === userId (passed from the auth)
+// ユーザーのIDによってuserのドキュメントを取得
 export async function getUserByUserId(userId) {
   const result = await firebase.firestore().collection('users').where('userId', '==', userId).get();
   const user = result.docs.map((item) => ({
@@ -25,52 +27,147 @@ export async function getUserByUserId(userId) {
   return user;
 }
 
-// check all conditions before limit results
+// firestoreからwhereを使用して、比較する配列が10個以上の場合にドキュメントを取得する関数
+// おすすめのユーザー用
+export async function getDocumentByArrays(arr, getQuery) {
+  return new Promise((resolve) => {
+    if (!arr) return resolve([]);
+
+    const spliceArr = [...arr];
+    const batches = [];
+
+    while (spliceArr.length) {
+      const batch = spliceArr.splice(0, 10);
+
+      batches.push(
+        new Promise((resolve) => {
+          getQuery(batch)
+            .get()
+            .then((results) => {
+              const profiles = results.docs.map((result) => ({
+                ...result.data(),
+                docId: result.id,
+              }));
+              const modifyProfiles = profiles.filter((profile) => {
+                console.log(!arr.includes(profile.userId));
+                return !arr.includes(profile.userId);
+              });
+              resolve(modifyProfiles);
+            });
+        })
+      );
+    }
+
+    Promise.all(batches).then((content) => {
+      console.log(content.flat());
+      const stackArr = [];
+      const duplicatedDeleteArr = content.flat().filter((e) => {
+        if (stackArr.indexOf(e.userId) === -1) {
+          stackArr.push(e.userId);
+          return true;
+        }
+        return false;
+      });
+      resolve(duplicatedDeleteArr);
+    });
+  });
+}
+
+// firestoreからwhereを使用して、比較する配列が10個以上の場合にドキュメントを取得する関数
+// whereでINを使用しているドキュメントの取得
+export async function getDocumentByArraysIn(arr, getQuery) {
+  return new Promise((resolve) => {
+    if (!arr) return resolve([]);
+
+    const spliceArr = [...arr];
+    const batches = [];
+
+    while (spliceArr.length) {
+      const batch = spliceArr.splice(0, 10);
+
+      batches.push(
+        new Promise((resolve) => {
+          getQuery(batch)
+            .get()
+            .then((results) => {
+              const profiles = results.docs.map((result) => ({
+                ...result.data(),
+                docId: result.id,
+              }));
+              resolve(profiles);
+            });
+        })
+      );
+    }
+
+    Promise.all(batches).then((content) => {
+      resolve(content.flat());
+    });
+  });
+}
+
+// おすすめのユーザーを取得
 export async function getSuggestedProfiles(userId, following, maker) {
-  let query = firebase.firestore().collection('users');
+  const collectionPath = firebase.firestore().collection('users');
+  let result;
+  let profiles;
 
   if (following.length > 0) {
-    query = query.where('userId', 'not-in', [...following, userId]).where('maker', '==', maker);
-  } else {
-    query = query.where('userId', '!=', userId).where('maker', '==', maker);
-  }
-  const result = await query.limit(15).get();
+    const ids = [...following, userId];
 
-  const profiles = result.docs.map((user) => ({
-    ...user.data(),
-    docId: user.id,
-  }));
-
-  const gettedProfileIds = profiles.map((user) => user.userId);
-
-  if (result.docs.length < 15) {
-    let query = firebase.firestore().collection('users');
-    if (following.length > 0) {
-      query = query.where('userId', 'not-in', [...following, userId, ...gettedProfileIds]);
+    if (ids.length > 10) {
+      const getQuery = (batch) => collectionPath.where('userId', 'not-in', batch).where('maker', '==', maker).limit(100);
+      profiles = await getDocumentByArrays(ids, getQuery);
     } else {
-      query = query.where('userId', 'not-in', [...following, userId, ...gettedProfileIds]);
-    }
-    const addResult = await query.limit(15 - result.docs.length).get();
+      result = await collectionPath
+        .where('userId', 'not-in', [...following, userId])
+        .where('maker', '==', maker)
+        .limit(15)
+        .get();
 
-    const addProfiles = addResult.docs.map((user) => ({
+      profiles = result.docs.map((user) => ({
+        ...user.data(),
+        docId: user.id,
+      }));
+      console.log('あっち');
+    }
+  } else {
+    result = await collectionPath.where('userId', '!=', userId).where('maker', '==', maker).limit(15).get();
+
+    profiles = result.docs.map((user) => ({
       ...user.data(),
       docId: user.id,
     }));
+  }
 
+  const gettedProfileIds = profiles.map((user) => user.userId);
+
+  if (profiles.length < 15) {
+    let addIds;
+    let addProfiles;
+    if (following.length > 0) {
+      addIds = [...following, userId, ...gettedProfileIds];
+      const getQuery = (batch) => collectionPath.where('userId', 'not-in', batch).limit(100);
+      addProfiles = await getDocumentByArrays(addIds, getQuery);
+    } else {
+      addIds = [userId, ...gettedProfileIds];
+      const getQuery = (batch) => collectionPath.where('userId', 'not-in', batch).limit(100);
+      addProfiles = await getDocumentByArrays(addIds, getQuery);
+    }
+    addProfiles.slice(0, 15 - result.docs.length);
     const sumProfiles = [...addProfiles, ...profiles];
     sumProfiles.sort((a, b) => b.dateCreated - a.dateCreated);
 
     return sumProfiles;
+    // eslint-disable-next-line no-else-return
+  } else {
+    profiles.slice(0, 15);
+    return profiles;
   }
-
-  return profiles;
 }
 
-export async function updateLoggedInUserFollowing(
-  loggedInUserDocId, // currently logged in user document id (karl's profile)
-  profileId, // the user that karl requests to follow
-  isFollowingProfile // true/false (am i currently following this person?)
-) {
+// ログインしているユーザーのフォローしている人を更新
+export async function updateLoggedInUserFollowing(loggedInUserDocId, profileId, isFollowingProfile) {
   return firebase
     .firestore()
     .collection('users')
@@ -83,11 +180,8 @@ export async function updateLoggedInUserFollowing(
     });
 }
 
-export async function updateFollowedUserFollowers(
-  profileDocId, // currently logged in user document id (karl's profile)
-  loggedInUserDocId, // the user that karl requests to follow
-  isFollowingProfile // true/false (am i currently following this person?)
-) {
+// ログインしているユーザーのフォロワーを更新
+export async function updateFollowedUserFollowers(profileDocId, loggedInUserDocId, isFollowingProfile) {
   return firebase
     .firestore()
     .collection('users')
@@ -100,9 +194,10 @@ export async function updateFollowedUserFollowers(
     });
 }
 
+// ログインしているユーザーがフォローしている人のポストを取得
 export async function getPhotos(userId, following, latestDoc) {
   let result;
-  console.log(following);
+
   if (latestDoc) {
     result = await firebase
       .firestore()
@@ -140,6 +235,7 @@ export async function getPhotos(userId, following, latestDoc) {
   return { photosWithUserDetails, lastDoc };
 }
 
+// ログインしているユーザーがお気に入りしているポストを取得
 export async function getPhotosFavorite(userId, likes) {
   let likesPhotos;
 
@@ -156,9 +252,9 @@ export async function getPhotosFavorite(userId, likes) {
       if (photo.likes.includes(userId)) {
         userLikedPhoto = true;
       }
-      // photo.userId = 2
+
       const user = await getUserByUserId(photo.userId);
-      // raphael
+
       const { username } = user[0];
       return { username, ...photo, userLikedPhoto };
     })
@@ -167,6 +263,7 @@ export async function getPhotosFavorite(userId, likes) {
   return photosWithUserDetails;
 }
 
+// すべてのポストを取得
 export async function getPhotosAll(userId, latestDoc) {
   let result;
 
@@ -206,6 +303,7 @@ export async function getPhotosAll(userId, latestDoc) {
   return { photosWithUserDetails, lastDoc };
 }
 
+// ユーザーIDによってポストを取得
 export async function getUserPhotosByUserId(userId) {
   if (userId) {
     const result = await firebase.firestore().collection('photos').where('userId', '==', userId).get();
@@ -234,6 +332,7 @@ export async function getUserPhotosByUserId(userId) {
   return null;
 }
 
+// ユーザーをフォローしているかをチェック
 export async function isUserFollowingProfile(loggedInUserUsername, profileUserId) {
   const result = await firebase
     .firestore()
@@ -249,12 +348,14 @@ export async function isUserFollowingProfile(loggedInUserUsername, profileUserId
   return response.userId;
 }
 
+// フォローとフォローの解除
 export async function toggleFollow(isFollowingProfile, activeUserDocId, profileDocId, profileUserId, followingUserId) {
   await updateLoggedInUserFollowing(activeUserDocId, profileUserId, isFollowingProfile);
 
   await updateFollowedUserFollowers(profileDocId, followingUserId, isFollowingProfile);
 }
 
+// フォローしている人のuserドキュメントを取得
 export async function getProfileFollowingUsers(following) {
   let users = null;
 
@@ -273,7 +374,7 @@ export async function getProfileFollowingUsers(following) {
 
   return users;
 }
-
+// フォローされている人のuserドキュメントを取得
 export async function getProfileFollowedgUsers(followed) {
   let users = [];
 
