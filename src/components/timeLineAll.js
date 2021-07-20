@@ -61,7 +61,9 @@ export default function TimelineAll() {
                 onClick={() => addNextPhoto(latestDoc)}
                 type="button"
                 className={`font-bold border text-gray-700 border-gray-700 px-3 py-2 rounded-md ${
-                  isLoading || isReachingEnd ? 'opacity-50 cursor-default' : 'hover:text-white hover:bg-gray-700'
+                  isLoading || isReachingEnd
+                    ? 'opacity-50 cursor-default'
+                    : 'hover:text-white hover:bg-gray-700 focus:outline-logoColor focus:ring-logoColor-base focus:border-logoColor-base'
                 } `}
                 disabled={isLoading || isReachingEnd}
               >
