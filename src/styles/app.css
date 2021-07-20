@@ -1843,10 +1843,6 @@ select {
     border-width: 0px;
   }
 
-  .sm\:inline-block {
-    display: inline-block;
-  }
-
   .sm\:flex {
     display: flex;
   }

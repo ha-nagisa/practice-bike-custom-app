@@ -317,7 +317,7 @@ export default function ProfileEdit() {
                       id="username"
                       name="username"
                       type="text"
-                      className="w-11/12 border border-gray-400 focus:outline-none focus:text-gray-600 p-2 text-black-base"
+                      className="w-11/12 border border-gray-400 focus:outline-logoColor focus:ring-logoColor-base focus:border-logoColor-base focus:text-gray-600 p-2 text-black-base"
                       placeholder="田中太郎"
                       onChange={({ target }) => setUsername(target.value.trim())}
                       value={username}
@@ -343,7 +343,7 @@ export default function ProfileEdit() {
                       id="email"
                       type="email"
                       name="email"
-                      className="w-11/12  border border-gray-400  focus:outline-none focus:text-gray-600 p-2 text-black-base"
+                      className="w-11/12  border border-gray-400  focus:outline-logoColor focus:ring-logoColor-base focus:border-logoColor-base focus:text-gray-600 p-2 text-black-base"
                       placeholder="email@example.com"
                       onChange={({ target }) => setEmailAddress(target.value)}
                       value={emailAddress}
@@ -394,7 +394,7 @@ export default function ProfileEdit() {
                   </label>
                   <div className="w-full inline-flex border">
                     <select
-                      className="w-full border border-gray-400  focus:outline-none focus:text-gray-600 p-2 text-black-base"
+                      className="w-full border border-gray-400  focus:outline-logoColor focus:ring-logoColor-base focus:border-logoColor-base focus:text-gray-600 p-2 text-black-base"
                       id="maker"
                       value={maker}
                       onChange={(e) => setMaker(e.target.value)}
@@ -610,7 +610,7 @@ export default function ProfileEdit() {
                       id="carModel"
                       type="text"
                       name="carModel"
-                      className="w-full  border border-gray-400  focus:outline-none focus:text-gray-600 p-2 text-black-base"
+                      className="w-full  border border-gray-400  focus:outline-logoColor focus:ring-logoColor-base focus:border-logoColor-base focus:text-gray-600 p-2 text-black-base"
                       placeholder="例) GB350"
                       onChange={({ target }) => setCarModel(target.value)}
                       value={carModel}
