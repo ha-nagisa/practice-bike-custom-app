@@ -1225,6 +1225,11 @@ select {
   outline-offset: 2px;
 }
 
+.focus\:outline-logoColor:focus {
+  outline: 1px solid #FFBF66;
+  outline-offset: 0;
+}
+
 .overflow-auto {
   overflow: auto;
 }

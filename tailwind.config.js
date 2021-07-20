@@ -51,6 +51,7 @@ module.exports = {
       },
       minWidth: {
         900: '900px',
+        '300px': '300px',
       },
       maxWidth: {
         '540px': '540px',
@@ -59,11 +60,11 @@ module.exports = {
       maxHeight: {
         '600px': '600px',
       },
-      minWidth: {
-        '300px': '300px',
-      },
       boxShadow: {
         borderBottom: '0 4px 0px 0px rgba(0, 0, 0, 0.01)',
+      },
+      outline: {
+        logoColor: '1px solid #FFBF66',
       },
     },
   },
