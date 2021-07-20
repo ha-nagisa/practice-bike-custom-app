@@ -692,11 +692,6 @@ select {
   background-color: rgba(220, 38, 38, var(--tw-bg-opacity));
 }
 
-.bg-blue-medium {
-  --tw-bg-opacity: 1;
-  background-color: rgba(0, 92, 152, var(--tw-bg-opacity));
-}
-
 .bg-logoColor-base {
   --tw-bg-opacity: 1;
   background-color: rgba(255, 152, 0, var(--tw-bg-opacity));
@@ -1562,11 +1557,6 @@ select {
 .text-red-primary {
   --tw-text-opacity: 1;
   color: rgba(237, 73, 86, var(--tw-text-opacity));
-}
-
-.text-blue-medium {
-  --tw-text-opacity: 1;
-  color: rgba(0, 92, 152, var(--tw-text-opacity));
 }
 
 .text-logoColor-base {
