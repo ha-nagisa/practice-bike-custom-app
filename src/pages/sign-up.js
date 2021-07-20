@@ -390,7 +390,7 @@ export default function SignUp() {
             <button
               disabled={isInvalid || isActioning}
               type="submit"
-              className={`bg-logoColor-base border border-logoColor-base text-white w-full rounded h-10 font-bold mb-2
+              className={`bg-logoColor-base border border-logoColor-base text-white w-full rounded h-10 font-bold mb-2 focus:outline-logoColor
             ${isInvalid || isActioning ? 'opacity-50 cursor-default' : 'hover:bg-white hover:text-logoColor-base'}`}
             >
               {isActioning ? '読み込み中...' : 'Sign Up'}

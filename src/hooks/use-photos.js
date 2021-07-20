@@ -9,10 +9,13 @@ export default function usePhotos(user) {
       // フォローしているユーザーはいるか
       if (user || user?.following?.length > 0) {
         const { photosWithUserDetails: followedUserPhotos } = await getPhotos(user.userId, user.following);
-
-        // 日付順に並び替える
-        followedUserPhotos.sort((a, b) => b.dateCreated - a.dateCreated);
-        setPhotos(followedUserPhotos);
+        if (followedUserPhotos) {
+          // 日付順に並び替える
+          followedUserPhotos.sort((a, b) => b.dateCreated - a.dateCreated);
+          setPhotos(followedUserPhotos);
+        } else {
+          setPhotos([]);
+        }
       } else {
         setPhotos([]);
       }

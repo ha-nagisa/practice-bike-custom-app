@@ -28,6 +28,7 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { loggedInUserPhotos, setLoggedInUserPhotos } = useActiveUserPhotos(user?.uid);
   const { user: activeUser, setActiveUser } = useUser(user?.uid);
+  console.log(loggedInUserPhotos);
 
   const successDeleteToast = () =>
     toast.success('正常にアカウントが削除されました。', {

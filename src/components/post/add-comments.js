@@ -28,14 +28,14 @@ export default function AddComment({ docId, comments, setComments, commentInput 
   return (
     <div className="border-t border-gray-primary">
       <form
-        className="flex justify-between pl-0 pr-5"
+        className="flex justify-between pl-0"
         method="POST"
         onSubmit={(event) => (comment.length >= 1 ? handleSubmitComment(event) : event.preventDefault())}
       >
         <input
           aria-label="Add a comment"
           autoComplete="off"
-          className="text-sm text-gray-base w-full mr-3 sm:py-5 sm:px-4 py-4 px-3"
+          className="text-sm text-gray-base w-full sm:py-5 sm:px-4 py-4 px-3 focus:outline-logoColor focus:ring-logoColor-base focus:border-logoColor-base"
           type="text"
           name="add-comment"
           placeholder="Add a comment..."
@@ -44,7 +44,9 @@ export default function AddComment({ docId, comments, setComments, commentInput 
           ref={commentInput}
         />
         <button
-          className={`text-sm font-bold text-logoColor-base ${!comment && 'opacity-25'}`}
+          className={`px-5 text-sm font-bold text-logoColor-base focus:outline-logoColor focus:ring-logoColor-base focus:border-logoColor-base ${
+            !comment && 'opacity-25'
+          }`}
           type="button"
           disabled={comment.length < 1}
           onClick={handleSubmitComment}
