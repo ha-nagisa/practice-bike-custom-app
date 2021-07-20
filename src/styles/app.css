@@ -1354,10 +1354,6 @@ select {
   padding-top: 1.25rem;
 }
 
-.pr-5 {
-  padding-right: 1.25rem;
-}
-
 .pb-5 {
   padding-bottom: 1.25rem;
 }
@@ -1845,6 +1841,10 @@ select {
 @media (min-width: 640px) {
   .sm\:border-0 {
     border-width: 0px;
+  }
+
+  .sm\:inline-block {
+    display: inline-block;
   }
 
   .sm\:flex {
