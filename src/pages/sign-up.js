@@ -109,7 +109,7 @@ export default function SignUp() {
       </div>
       <div className="flex flex-col w-full sm:w-1/2 sm:pt-harf sm:relative sm:border-0">
         <div className="flex flex-col items-center sm:w-4/5 rounded mx-auto sm:mx-0 sm:absolute sm:top-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2">
-          <div className="bg-white p-4 mb-4 shadow-lg text-center">
+          <div className="bg-white p-4 mb-4 shadow-lg text-center mt-4">
             <div className="mb-5 block sm:hidden">
               <img src="/images/smLoginLogo.png" alt="Bun Bun BIKE" width="300px" />
             </div>
@@ -404,7 +404,7 @@ export default function SignUp() {
               </Link>
             </p>
           </div>
-          <div className="text-xs">
+          <div className="text-xs mb-4">
             ※使い方は
             <a href="https://nagisa-profile.com/works/bike-custom-diary" className="font-bold text-gray-400 underline">
               こちら

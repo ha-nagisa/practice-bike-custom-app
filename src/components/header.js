@@ -4,7 +4,6 @@ import FirebaseContext from '../context/firebase';
 import UserContext from '../context/user';
 import * as ROUTES from '../constants/routes';
 import { DEFAULT_IMAGE_PATH } from '../constants/paths';
-import useUser from '../hooks/use-user';
 import LoggedInUserContext from '../context/logged-in-user';
 
 export default function Header() {
