@@ -225,10 +225,12 @@ export async function getPhotosFavorite(userId, likes) {
   let likesPhotos;
 
   await Promise.all(likes.map((docId) => firebase.firestore().collection('photos').doc(docId).get())).then((docs) => {
-    likesPhotos = docs.map((doc) => ({
-      ...doc.data(),
-      docId: doc.id,
-    }));
+    likesPhotos = docs
+      .filter((doc) => !!doc.data())
+      .map((doc) => ({
+        ...doc.data(),
+        docId: doc.id,
+      }));
   });
 
   const photosWithUserDetails = await Promise.all(
