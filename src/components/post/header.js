@@ -30,7 +30,7 @@ export default function Header({ content, postUser, isProfilePage }) {
           <Link to={`/p/${content.username}`} className="flex items-center">
             <img
               className="rounded-full h-8 w-8 flex mr-3"
-              src={!postUser.bikeImageUrl ? `/images/avatars/default.png` : postUser.bikeImageUrl}
+              src={!postUser || !postUser?.bikeImageUrl ? `/images/avatars/default.png` : postUser.bikeImageUrl}
               alt={`${content.username} profile picture`}
             />
             <p className="font-bold">{content.username}</p>

@@ -44,13 +44,13 @@ export default function ResetPasswordModal({ setIsResetModalOpen, resetEmail, se
                 value={resetEmail}
                 className="mr-5 border-0 border-b-2 border-gray-400 focus:border-logoColor-base focus:outline-none focus:shadow-none focus:ring-0 focus:translate-x-2"
               />
-              <bytton
+              <button
                 type="button"
                 onClick={sendResetEmail}
                 className="transform hover:translate-x-2.5 ease-in-out duration-150 cursor-pointer hover:opacity-70"
               >
                 <img className="h-10 w-10 object-cover" src="/images/resetEmailIcon.png" alt="送信ボタン" />
-              </bytton>
+              </button>
             </div>
           </div>
         </div>
