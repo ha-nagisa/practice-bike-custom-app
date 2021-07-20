@@ -13,6 +13,7 @@ import useUser from './hooks/use-user';
 import LoggedInUserContext from './context/logged-in-user';
 import useActiveUserPhotos from './hooks/use-photos-activeUser';
 import AccountDeleteToastContext from './context/accountDeleteToast';
+import Loading from './components/Loading';
 
 const Login = lazy(() => import('./pages/login'));
 const SignUp = lazy(() => import('./pages/sign-up'));
@@ -28,7 +29,6 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { loggedInUserPhotos, setLoggedInUserPhotos } = useActiveUserPhotos(user?.uid);
   const { user: activeUser, setActiveUser } = useUser(user?.uid);
-  console.log(loggedInUserPhotos);
 
   const successDeleteToast = () =>
     toast.success('正常にアカウントが削除されました。', {
@@ -51,7 +51,7 @@ export default function App() {
           <UserPhotosContext.Provider value={{ loggedInUserPhotos, setLoggedInUserPhotos }}>
             <AccountDeleteToastContext.Provider value={{ successDeleteToast }}>
               <Router>
-                <Suspense fallback={<div>...Loading</div>}>
+                <Suspense fallback={<Loading />}>
                   <Switch>
                     <IsUserLoggedIn user={user} loggedInPath={ROUTES.DASHBOARD} path={ROUTES.LOGIN}>
                       <Login />
