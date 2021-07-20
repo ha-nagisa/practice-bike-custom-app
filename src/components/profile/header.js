@@ -120,7 +120,7 @@ export default function Header({
             <Skeleton count={1} width={300} height={24} />
           ) : (
             <>
-              <p type="button" className="mr-10">
+              <p className="mr-10">
                 <span className="font-bold text-lg">{photosCount}</span> posts
               </p>
               <button onClick={openFollowedModal} type="button" className="mr-10 block focus:outline-none">
