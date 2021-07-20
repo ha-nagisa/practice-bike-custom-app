@@ -1,10 +1,20 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 
-export default function Image({ src, title }) {
-  return <img className="w-full" src={!src ? 'images/postDummy.jpg' : src} alt={title} />;
+export default function Image({ realSrc, title }) {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <img
+      className={`w-full ${loaded ? null : 'animate-pulse'}`}
+      src={loaded ? realSrc : '/images/postDummy.jpg'}
+      alt={title}
+      onLoad={() => setLoaded(true)}
+    />
+  );
 }
 
 Image.propTypes = {
-  src: PropTypes.string.isRequired,
+  realSrc: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
 };
