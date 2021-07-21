@@ -1167,6 +1167,10 @@ select {
   margin-bottom: 3rem;
 }
 
+.mt-20 {
+  margin-top: 5rem;
+}
+
 .max-h-600px {
   max-height: 600px;
 }
@@ -1332,6 +1336,10 @@ select {
 .py-10 {
   padding-top: 2.5rem;
   padding-bottom: 2.5rem;
+}
+
+.pt-0 {
+  padding-top: 0px;
 }
 
 .pl-0 {
@@ -1920,6 +1928,10 @@ select {
   .sm\:py-5 {
     padding-top: 1.25rem;
     padding-bottom: 1.25rem;
+  }
+
+  .sm\:pt-5 {
+    padding-top: 1.25rem;
   }
 
   .sm\:pr-20 {
