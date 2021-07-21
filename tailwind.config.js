@@ -66,6 +66,9 @@ module.exports = {
       outline: {
         logoColor: '1px solid #FFBF66',
       },
+      gridTemplateRows: {
+        '280px': '280px',
+      },
     },
   },
   variants: {
