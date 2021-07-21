@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { updateLoggedInUserFollowing, updateFollowedUserFollowers, getUserByUserId } from '../../services/firebase';

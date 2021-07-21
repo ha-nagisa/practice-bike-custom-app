@@ -18,6 +18,7 @@ export default function Timeline() {
     if (photos && page === 1) {
       setDisplayPhotos(photos.filter((_, key) => key < 6));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [photos]);
   console.log(photos);
 

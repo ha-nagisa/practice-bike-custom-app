@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import FirebaseContext from '../../context/firebase';
-import { backfaceFixed } from '../../utils/backfaceFixed';
+import backfaceFixed from '../../utils/backfaceFixed';
 import * as ROUTES from '../../constants/routes';
 import AccountDeleteToastContext from '../../context/accountDeleteToast';
 import LoggedInUserContext from '../../context/logged-in-user';

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import ModalContext from '../context/modal';
 import FirebaseContext from '../context/firebase';
 import UserPhotosContext from '../context/userPhotos';
-import { backfaceFixed } from '../utils/backfaceFixed';
+import backfaceFixed from '../utils/backfaceFixed';
 
 export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
   const { loggedInUserPhotos, setLoggedInUserPhotos } = useContext(UserPhotosContext);

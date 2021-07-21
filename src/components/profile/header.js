@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Skeleton from 'react-loading-skeleton';
 import { isUserFollowingProfile, toggleFollow } from '../../services/firebase';
-import { backfaceFixed } from '../../utils/backfaceFixed';
+import backfaceFixed from '../../utils/backfaceFixed';
 import LoggedInUserContext from '../../context/logged-in-user';
 
 export default function Header({

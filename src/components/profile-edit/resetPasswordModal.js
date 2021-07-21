@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import FirebaseContext from '../../context/firebase';
-import { backfaceFixed } from '../../utils/backfaceFixed';
+import backfaceFixed from '../../utils/backfaceFixed';
 
 export default function ResetPasswordModal({ setIsResetModalOpen, resetEmail, setResetEmail, successResetToast }) {
   const { firebase } = useContext(FirebaseContext);

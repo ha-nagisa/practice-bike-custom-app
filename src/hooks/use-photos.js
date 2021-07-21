@@ -22,6 +22,7 @@ export default function usePhotos(user) {
     }
 
     getTimelinePhotos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.userId, user?.following]);
 
   return { photos };

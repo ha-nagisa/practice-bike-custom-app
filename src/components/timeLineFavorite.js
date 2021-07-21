@@ -18,6 +18,7 @@ export default function TimelineFavorite() {
     if (photos && page === 1) {
       setDisplayPhotos(photos.filter((e, key) => key < 6));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [photos]);
 
   const getNextFavoritePhoto = async () => {
