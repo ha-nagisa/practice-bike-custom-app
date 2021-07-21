@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { backfaceFixed } from '../../utils/backfaceFixed';
+import backfaceFixed from '../../utils/backfaceFixed';
 import { getProfileFollowingUsers } from '../../services/firebase';
 
 export default function FollowingUserModal({ user, setIsOpenFollowingModal }) {

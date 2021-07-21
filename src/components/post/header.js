@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import ModalContext from '../../context/modal';
 import UserContext from '../../context/user';
-import { backfaceFixed } from '../../utils/backfaceFixed';
+import backfaceFixed from '../../utils/backfaceFixed';
 
 export default function Header({ content, postUser, isProfilePage }) {
   const { setModalInfo, isModalOpen, setIsModalOpen } = useContext(ModalContext);

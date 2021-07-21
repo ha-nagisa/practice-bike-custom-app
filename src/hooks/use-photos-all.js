@@ -31,6 +31,7 @@ export default function usePhotosAll(user) {
     if (latestDoc === null) {
       getTimelinePhotosAll();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.userId, loggedInUserPhotos]);
 
   return { photos, setPhotos, latestDoc, setLatestDoc };

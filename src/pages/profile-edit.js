@@ -11,7 +11,7 @@ import Header from '../components/header';
 import LoggedInUserContext from '../context/logged-in-user';
 import * as ROUTES from '../constants/routes';
 import ResetPasswordModal from '../components/profile-edit/resetPasswordModal';
-import { backfaceFixed } from '../utils/backfaceFixed';
+import backfaceFixed from '../utils/backfaceFixed';
 import DeleteAccountModal from '../components/profile-edit/DeleteAccountModal';
 import { doesUsernameExist } from '../services/firebase';
 

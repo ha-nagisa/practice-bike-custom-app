@@ -28,4 +28,4 @@ const backfaceFixed = (fixed) => {
   if (!fixed) window.scrollTo(0, scrollY * -1);
 };
 
-export { backfaceFixed };
+export default backfaceFixed;
