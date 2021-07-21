@@ -42,7 +42,7 @@ export default function Dashboard() {
     <SuggestionsProfilesContext.Provider value={{ profiles, setProfiles }}>
       <div className="bg-gray-background  relative">
         <Header />
-        <div className="grid lg:grid-cols-5 grid-cols-4 gap-4 justify-between mx-auto max-w-screen-xl  px-5">
+        <div className="grid lg:grid-cols-5 grid-cols-4 gap-4 justify-between items-start mx-auto max-w-screen-xl grid-rows-280px px-5">
           <div className="col-span-4 grid-cols-4 grid gap-2">
             <div className="col-span-4 flex items-center mb-3">
               <div className="w-1/3">
