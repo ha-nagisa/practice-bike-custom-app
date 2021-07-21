@@ -7,6 +7,7 @@ import FirebaseContext from '../context/firebase';
 import * as ROUTES from '../constants/routes';
 import { doesUsernameExist, getUserByUserId } from '../services/firebase';
 import LoggedInUserContext from '../context/logged-in-user';
+import DEFAULT_IMAGE_PATH from '../constants/paths';
 
 export default function SignUp() {
   const history = useHistory();
@@ -142,7 +143,7 @@ export default function SignUp() {
                   <label className="cursor-pointer mb-2 inline-block hover:opacity-70">
                     <img
                       className="inline object-cover w-16 h-16 mr-2 rounded-full border-2 border-gray-primary"
-                      src="/images/avatars/bikeDefault.png"
+                      src={DEFAULT_IMAGE_PATH}
                       alt="bike example"
                     />
                     <br />

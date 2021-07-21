@@ -7,6 +7,7 @@ import Skeleton from 'react-loading-skeleton';
 import { isUserFollowingProfile, toggleFollow } from '../../services/firebase';
 import backfaceFixed from '../../utils/backfaceFixed';
 import LoggedInUserContext from '../../context/logged-in-user';
+import DEFAULT_IMAGE_PATH from '../../constants/paths';
 
 export default function Header({
   photosCount,
@@ -68,9 +69,9 @@ export default function Header({
           <img
             className="inline object-cover w-40 h-40 mr-2 rounded-full"
             alt={`${carModel} profile picture`}
-            src={!profileBikeImageUrl ? `/images/avatars/default.png` : profileBikeImageUrl}
+            src={!profileBikeImageUrl ? DEFAULT_IMAGE_PATH : profileBikeImageUrl}
             onError={(e) => {
-              e.target.src = `/images/avatars/default.png`;
+              e.target.src = DEFAULT_IMAGE_PATH;
             }}
           />
           <div className="container mt-3">

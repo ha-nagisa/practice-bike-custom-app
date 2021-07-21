@@ -14,6 +14,7 @@ import ResetPasswordModal from '../components/profile-edit/resetPasswordModal';
 import backfaceFixed from '../utils/backfaceFixed';
 import DeleteAccountModal from '../components/profile-edit/DeleteAccountModal';
 import { doesUsernameExist } from '../services/firebase';
+import DEFAULT_IMAGE_PATH from '../constants/paths';
 
 export default function ProfileEdit() {
   const location = useLocation();
@@ -378,7 +379,7 @@ export default function ProfileEdit() {
                       <label className="cursor-pointer mb-2 inline-block hover:opacity-70">
                         <img
                           className="inline object-cover w-20 h-20 mr-2 rounded-full border-2 border-gray-primary"
-                          src="/images/avatars/bikeDefault.png"
+                          src={DEFAULT_IMAGE_PATH}
                           alt="bike example"
                         />
                         <br />

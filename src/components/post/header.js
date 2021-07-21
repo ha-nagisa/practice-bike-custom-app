@@ -2,6 +2,7 @@
 import PropTypes from 'prop-types';
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import DEFAULT_IMAGE_PATH from '../../constants/paths';
 import ModalContext from '../../context/modal';
 import UserContext from '../../context/user';
 import backfaceFixed from '../../utils/backfaceFixed';
@@ -30,7 +31,7 @@ export default function Header({ content, postUser, isProfilePage }) {
           <Link to={`/p/${content.username}`} className="flex items-center">
             <img
               className="rounded-full h-8 w-8 flex mr-3"
-              src={!postUser || !postUser?.bikeImageUrl ? `/images/avatars/bikeDefault.png` : postUser.bikeImageUrl}
+              src={!postUser || !postUser?.bikeImageUrl ? DEFAULT_IMAGE_PATH : postUser.bikeImageUrl}
               alt={`${content.username} profile picture`}
             />
             <p className="font-bold">{content.username}</p>
