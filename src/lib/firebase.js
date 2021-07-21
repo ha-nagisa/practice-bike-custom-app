@@ -4,12 +4,12 @@ import 'firebase/auth';
 import 'firebase/storage';
 
 const config = {
-  apiKey: 'AIzaSyD-pAc_OBEfdYnE06CFrmxQTpifeX-eeac',
-  authDomain: 'instagram-app-f8cfc.firebaseapp.com',
-  projectId: 'instagram-app-f8cfc',
-  storageBucket: 'instagram-app-f8cfc.appspot.com',
-  messagingSenderId: '764391997135',
-  appId: '1:764391997135:web:f804326333e9afef7701ba',
+  apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
+  authDomain: process.env.REACT_APP_FIREBASE_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 const firebase = Firebase.initializeApp(config);
