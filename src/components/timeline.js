@@ -53,7 +53,7 @@ export default function Timeline() {
             <Post key={content.docId} content={content} />
           ))}
           {isDisplayMoreRead ? (
-            <div className="col-span-4 text-center pb-10 pt-5">
+            <div className="col-span-4 text-center pb-10 pt-0 sm:pt-5">
               <button
                 onClick={addNextPhoto}
                 type="button"
