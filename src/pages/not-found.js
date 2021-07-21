@@ -9,8 +9,8 @@ export default function NotFound() {
   return (
     <div className="bg-gray-background">
       <Header />
-      <div className="mx-auto max-w-screen-lg">
-        <p className="text-center text-2xl">Not Found!</p>
+      <div className="mx-auto max-w-screen-lg mt-20">
+        <p className="text-center text-xl">該当のページが見つかりません。</p>
       </div>
     </div>
   );

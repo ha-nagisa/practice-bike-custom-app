@@ -10,7 +10,7 @@ export default function Suggestions() {
   const { user } = useContext(LoggedInUserContext);
 
   return !profiles ? (
-    <Skeleton count={1} height={150} className="mt-5" />
+    <Skeleton count={1} height={600} className="mt-5" />
   ) : profiles.length > 0 ? (
     <div className="rounded flex flex-col">
       <div className="text-sm flex items-center align-items justify-between mb-2">

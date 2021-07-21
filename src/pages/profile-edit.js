@@ -125,6 +125,16 @@ export default function ProfileEdit() {
             url = await firebase.storage().ref('bikes').child(fileName).getDownloadURL();
 
             await firebase
+              .auth()
+              .currentUser.updateProfile({
+                displayName: username.toLowerCase(),
+                photoURL: url,
+              })
+              .catch((error) => {
+                throw new Error(error.message);
+              });
+
+            await firebase
               .firestore()
               .collection('users')
               .doc(activeUser?.docId)
@@ -140,13 +150,45 @@ export default function ProfileEdit() {
               });
 
             await firebase
-              .auth()
-              .currentUser.updateProfile({
-                displayName: username.toLowerCase(),
-                photoURL: url,
-              })
-              .catch((error) => {
-                throw new Error(error.message);
+              .firestore()
+              .collection('photos')
+              .where('comments', '!=', [])
+              .get()
+              .then(async (res) => {
+                console.log('おっと');
+                console.log(res.docs.map((doc) => ({ ...doc.data() })));
+                if (res.docs.length > 0) {
+                  await Promise.all(
+                    res.docs.map((doc) => {
+                      console.log(doc.id);
+                      if (doc.data().comments.some((comment) => comment.displayName === activeUser.username)) {
+                        console.log(doc.id);
+                        firebase
+                          .firestore()
+                          .collection('photos')
+                          .doc(doc.id)
+                          .update({
+                            comments: doc.data().comments.map((e) => {
+                              if (e.displayName === activeUser.username) {
+                                return {
+                                  comment: e.comment,
+                                  displayName: username.toLowerCase(),
+                                };
+                              }
+                              return e;
+                            }),
+                          });
+                      }
+                      return doc;
+                    })
+                  )
+                    .then(() => {
+                      console.log('コメントのユーザーネーム更新成功');
+                    })
+                    .catch((error) => {
+                      throw new Error(error.message);
+                    });
+                }
               });
 
             setActiveUser((prev) => ({
@@ -160,6 +202,15 @@ export default function ProfileEdit() {
 
             successUpdateToast();
           } else {
+            await firebase
+              .auth()
+              .currentUser.updateProfile({
+                displayName: username.toLowerCase(),
+              })
+              .catch((error) => {
+                throw new Error(error.message);
+              });
+
             await firebase
               .firestore()
               .collection('users')
@@ -175,12 +226,45 @@ export default function ProfileEdit() {
               });
 
             await firebase
-              .auth()
-              .currentUser.updateProfile({
-                displayName: username.toLowerCase(),
-              })
-              .catch((error) => {
-                throw new Error(error.message);
+              .firestore()
+              .collection('photos')
+              .where('comments', '!=', [])
+              .get()
+              .then(async (res) => {
+                console.log('おっと');
+                console.log(res.docs.map((doc) => ({ ...doc.data() })));
+                if (res.docs.length > 0) {
+                  await Promise.all(
+                    res.docs.map((doc) => {
+                      console.log(doc.id);
+                      if (doc.data().comments.some((comment) => comment.displayName === activeUser.username)) {
+                        console.log(doc.id);
+                        firebase
+                          .firestore()
+                          .collection('photos')
+                          .doc(doc.id)
+                          .update({
+                            comments: doc.data().comments.map((e) => {
+                              if (e.displayName === activeUser.username) {
+                                return {
+                                  comment: e.comment,
+                                  displayName: username.toLowerCase(),
+                                };
+                              }
+                              return e;
+                            }),
+                          });
+                      }
+                      return doc;
+                    })
+                  )
+                    .then(() => {
+                      console.log('コメントのユーザーネーム更新成功');
+                    })
+                    .catch((error) => {
+                      throw new Error(error.message);
+                    });
+                }
               });
 
             setActiveUser((prev) => ({
@@ -233,7 +317,7 @@ export default function ProfileEdit() {
                       id="username"
                       name="username"
                       type="text"
-                      className="w-11/12 border border-gray-400 focus:outline-none focus:text-gray-600 p-2 text-black-base"
+                      className="w-11/12 border border-gray-400 focus:outline-logoColor focus:ring-logoColor-base focus:border-logoColor-base focus:text-gray-600 p-2 text-black-base"
                       placeholder="田中太郎"
                       onChange={({ target }) => setUsername(target.value.trim())}
                       value={username}
@@ -259,7 +343,7 @@ export default function ProfileEdit() {
                       id="email"
                       type="email"
                       name="email"
-                      className="w-11/12  border border-gray-400  focus:outline-none focus:text-gray-600 p-2 text-black-base"
+                      className="w-11/12  border border-gray-400  focus:outline-logoColor focus:ring-logoColor-base focus:border-logoColor-base focus:text-gray-600 p-2 text-black-base"
                       placeholder="email@example.com"
                       onChange={({ target }) => setEmailAddress(target.value)}
                       value={emailAddress}
@@ -310,7 +394,7 @@ export default function ProfileEdit() {
                   </label>
                   <div className="w-full inline-flex border">
                     <select
-                      className="w-full border border-gray-400  focus:outline-none focus:text-gray-600 p-2 text-black-base"
+                      className="w-full border border-gray-400  focus:outline-logoColor focus:ring-logoColor-base focus:border-logoColor-base focus:text-gray-600 p-2 text-black-base"
                       id="maker"
                       value={maker}
                       onChange={(e) => setMaker(e.target.value)}
@@ -526,7 +610,7 @@ export default function ProfileEdit() {
                       id="carModel"
                       type="text"
                       name="carModel"
-                      className="w-full  border border-gray-400  focus:outline-none focus:text-gray-600 p-2 text-black-base"
+                      className="w-full  border border-gray-400  focus:outline-logoColor focus:ring-logoColor-base focus:border-logoColor-base focus:text-gray-600 p-2 text-black-base"
                       placeholder="例) GB350"
                       onChange={({ target }) => setCarModel(target.value)}
                       value={carModel}

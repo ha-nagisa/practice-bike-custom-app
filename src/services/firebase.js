@@ -154,7 +154,7 @@ export async function getSuggestedProfiles(userId, following, maker) {
       const getQuery = (batch) => collectionPath.where('userId', 'not-in', batch).limit(100);
       addProfiles = await getDocumentByArrays(addIds, getQuery);
     }
-    addProfiles.slice(0, 15 - result.docs.length);
+    addProfiles.slice(0, result || result !== undefined ? 15 - result.docs.length : 0);
     const sumProfiles = [...addProfiles, ...profiles];
     sumProfiles.sort((a, b) => b.dateCreated - a.dateCreated);
 
@@ -195,44 +195,29 @@ export async function updateFollowedUserFollowers(profileDocId, loggedInUserDocI
 }
 
 // ログインしているユーザーがフォローしている人のポストを取得
-export async function getPhotos(userId, following, latestDoc) {
-  let result;
+export async function getPhotos(userId, following) {
+  if (following && following.length > 0) {
+    const collectionPath = firebase.firestore().collection('photos');
+    const getQuery = (batch) => collectionPath.where('userId', 'in', batch);
+    const userFollowedPhotos = await getDocumentByArraysIn(following, getQuery);
 
-  if (latestDoc) {
-    result = await firebase
-      .firestore()
-      .collection('photos')
-      .where('userId', 'in', following)
-      .orderBy('dateCreated', 'desc')
-      .startAfter(latestDoc || 0)
-      .limit(6)
-      .get();
-  } else {
-    result = await firebase.firestore().collection('photos').where('userId', 'in', following).orderBy('dateCreated', 'desc').limit(6).get();
+    const photosWithUserDetails = await Promise.all(
+      userFollowedPhotos.map(async (photo) => {
+        let userLikedPhoto = false;
+        if (photo.likes.includes(userId)) {
+          userLikedPhoto = true;
+        }
+        // photo.userId = 2
+        const user = await getUserByUserId(photo.userId);
+        // raphael
+        const { username } = user[0];
+        return { username, ...photo, userLikedPhoto };
+      })
+    );
+
+    return { photosWithUserDetails };
   }
-
-  const lastDoc = result ? result.docs[result.docs.length - 1] : undefined;
-
-  const userFollowedPhotos = result.docs.map((photo) => ({
-    ...photo.data(),
-    docId: photo.id,
-  }));
-
-  const photosWithUserDetails = await Promise.all(
-    userFollowedPhotos.map(async (photo) => {
-      let userLikedPhoto = false;
-      if (photo.likes.includes(userId)) {
-        userLikedPhoto = true;
-      }
-      // photo.userId = 2
-      const user = await getUserByUserId(photo.userId);
-      // raphael
-      const { username } = user[0];
-      return { username, ...photo, userLikedPhoto };
-    })
-  );
-
-  return { photosWithUserDetails, lastDoc };
+  return [];
 }
 
 // ログインしているユーザーがお気に入りしているポストを取得
@@ -240,10 +225,12 @@ export async function getPhotosFavorite(userId, likes) {
   let likesPhotos;
 
   await Promise.all(likes.map((docId) => firebase.firestore().collection('photos').doc(docId).get())).then((docs) => {
-    likesPhotos = docs.map((doc) => ({
-      ...doc.data(),
-      docId: doc.id,
-    }));
+    likesPhotos = docs
+      .filter((doc) => !!doc.data())
+      .map((doc) => ({
+        ...doc.data(),
+        docId: doc.id,
+      }));
   });
 
   const photosWithUserDetails = await Promise.all(
@@ -357,19 +344,11 @@ export async function toggleFollow(isFollowingProfile, activeUserDocId, profileD
 
 // フォローしている人のuserドキュメントを取得
 export async function getProfileFollowingUsers(following) {
-  let users = null;
-
+  let users = [];
   if (following.length > 0) {
-    const result = await firebase
-      .firestore()
-      .collection('users')
-      .where('userId', 'in', [...following])
-      .get();
-
-    users = result.docs.map((user) => ({
-      ...user.data(),
-      docId: user.id,
-    }));
+    const collectionPath = firebase.firestore().collection('users');
+    const getQuery = (batch) => collectionPath.where('userId', 'in', batch);
+    users = await getDocumentByArraysIn(following, getQuery);
   }
 
   return users;
@@ -379,16 +358,9 @@ export async function getProfileFollowedgUsers(followed) {
   let users = [];
 
   if (followed.length > 0) {
-    const result = await firebase
-      .firestore()
-      .collection('users')
-      .where('userId', 'in', [...followed])
-      .get();
-
-    users = result.docs.map((user) => ({
-      ...user.data(),
-      docId: user.id,
-    }));
+    const collectionPath = firebase.firestore().collection('users');
+    const getQuery = (batch) => collectionPath.where('userId', 'in', batch);
+    users = await getDocumentByArraysIn(followed, getQuery);
   }
 
   return users;

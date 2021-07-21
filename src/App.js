@@ -13,6 +13,7 @@ import useUser from './hooks/use-user';
 import LoggedInUserContext from './context/logged-in-user';
 import useActiveUserPhotos from './hooks/use-photos-activeUser';
 import AccountDeleteToastContext from './context/accountDeleteToast';
+import Loading from './components/Loading';
 
 const Login = lazy(() => import('./pages/login'));
 const SignUp = lazy(() => import('./pages/sign-up'));
@@ -50,7 +51,7 @@ export default function App() {
           <UserPhotosContext.Provider value={{ loggedInUserPhotos, setLoggedInUserPhotos }}>
             <AccountDeleteToastContext.Provider value={{ successDeleteToast }}>
               <Router>
-                <Suspense fallback={<div>...Loading</div>}>
+                <Suspense fallback={<Loading />}>
                   <Switch>
                     <IsUserLoggedIn user={user} loggedInPath={ROUTES.DASHBOARD} path={ROUTES.LOGIN}>
                       <Login />
@@ -58,9 +59,15 @@ export default function App() {
                     <IsUserLoggedIn user={user} loggedInPath={ROUTES.DASHBOARD} path={ROUTES.SIGN_UP}>
                       <SignUp />
                     </IsUserLoggedIn>
-                    <Route path={ROUTES.PROFILE} component={Profile} exact />
-                    <Route path={ROUTES.PROFILE_EDIT} component={ProfileEdit} exact />
-                    <Route path={ROUTES.POST} component={Post} />
+                    <ProtectedRoute user={user} path={ROUTES.PROFILE} exact>
+                      <Profile />
+                    </ProtectedRoute>
+                    <ProtectedRoute user={user} path={ROUTES.PROFILE_EDIT} exact>
+                      <ProfileEdit />
+                    </ProtectedRoute>
+                    <ProtectedRoute user={user} path={ROUTES.POST} exact>
+                      <Post />
+                    </ProtectedRoute>
                     <ProtectedRoute user={user} path={ROUTES.DASHBOARD} exact>
                       <Dashboard />
                     </ProtectedRoute>
@@ -74,7 +81,6 @@ export default function App() {
                 gutter={8}
                 toastOptions={{
                   duration: 8000,
-                  // Default options for specific types
                   success: {
                     duration: 5000,
                   },

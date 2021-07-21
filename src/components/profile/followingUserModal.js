@@ -35,7 +35,7 @@ export default function FollowingUserModal({ user, setIsOpenFollowingModal }) {
       <div className="bg-white absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 h-96 w-80 z-10 rounded">
         <div className="bg-white overflow-auto w-full h-full rounded">
           <p className="p-2 text-gray-700 text-center border-b-2 border-gray-400">Your Following People</p>
-          {followingUsers ? (
+          {followingUsers && followingUsers.length > 0 ? (
             followingUsers.map((u) => (
               <div key={u.docId} className="border-b border-gray-400 p-2">
                 <button type="button" className="w-full text-left" onClick={() => leadProfile(u.username)}>
