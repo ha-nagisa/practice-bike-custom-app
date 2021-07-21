@@ -37,6 +37,7 @@ export default function Profile() {
     }
 
     checkUserExists();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username, history]);
 
   return user?.username ? (

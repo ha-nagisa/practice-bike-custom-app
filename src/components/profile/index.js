@@ -29,6 +29,7 @@ export default function Profile({ user, setIsOpenFollowingModal, setIsOpenFollow
     }
     getProfileInfoAndPhotos();
     console.log('こんにちは');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.username, loggedInUserPhotos]);
 
   return (

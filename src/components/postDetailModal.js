@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import ModalContext from '../context/modal';
-import { backfaceFixed } from '../utils/backfaceFixed';
+import backfaceFixed from '../utils/backfaceFixed';
 
 export default function PostDetailModal({ setIsModalOpen }) {
   const { modalInfo } = useContext(ModalContext);

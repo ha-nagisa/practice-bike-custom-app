@@ -10,7 +10,7 @@ import Skeleton from 'react-loading-skeleton';
 import LoggedInUserContext from '../../context/logged-in-user';
 import SuggestionsProfilesContext from '../../context/suggestions-profiles';
 import MobileSuggestedProfile from './mobile-suggested-profile';
-import { useWindowDimensions } from '../../hooks/use-window-dimensions';
+import useWindowDimensions from '../../hooks/use-window-dimensions';
 
 export default function MobileSidebarSuggestions() {
   const { profiles } = useContext(SuggestionsProfilesContext);

@@ -4,7 +4,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import FirebaseContext from '../context/firebase';
 import * as ROUTES from '../constants/routes';
 import ResetPasswordModal from '../components/profile-edit/resetPasswordModal';
-import { backfaceFixed } from '../utils/backfaceFixed';
+import backfaceFixed from '../utils/backfaceFixed';
 
 export default function Login() {
   const history = useHistory();
