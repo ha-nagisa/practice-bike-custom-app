@@ -38,7 +38,7 @@ export default function AddComment({ docId, comments, setComments, commentInput 
           className="text-sm text-gray-base w-full sm:py-5 sm:px-4 py-4 px-3 focus:outline-logoColor focus:ring-logoColor-base focus:border-logoColor-base"
           type="text"
           name="add-comment"
-          placeholder="Add a comment..."
+          placeholder="コメントを入力"
           value={comment}
           onChange={({ target }) => setComment(target.value)}
           ref={commentInput}
