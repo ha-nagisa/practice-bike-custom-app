@@ -51,7 +51,7 @@ export default function TimelineFavorite() {
             <Post key={content.docId} content={content} />
           ))}
           {isDisplayMoreRead ? (
-            <div className="col-span-4 text-center pb-10 pt-5">
+            <div className="col-span-4 text-center pb-10  pt-0 sm:pt-5">
               <button
                 type="button"
                 onClick={getNextFavoritePhoto}
