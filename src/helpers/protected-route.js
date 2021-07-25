@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
 
-export default function ProtectedRoute({ user, children, ...rest }) {
+export default function ProtectedRoute({ user, children, path, exact }) {
   return (
     <Route
-      {...rest}
+      path={path}
+      exact={exact}
       render={({ location }) => {
         if (user) {
           return React.cloneElement(children, { user });
@@ -32,4 +33,6 @@ export default function ProtectedRoute({ user, children, ...rest }) {
 ProtectedRoute.propTypes = {
   user: PropTypes.object,
   children: PropTypes.object.isRequired,
+  path: PropTypes.string.isRequired,
+  exact: PropTypes.bool.isRequired,
 };
