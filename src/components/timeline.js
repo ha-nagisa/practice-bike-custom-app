@@ -20,10 +20,8 @@ export default function Timeline() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [photos]);
-  console.log(photos);
 
   const addNextPhoto = () => {
-    console.log('こんにちは');
     setIsLoading(true);
     const nextPage = page + 1;
     setPage(nextPage);
