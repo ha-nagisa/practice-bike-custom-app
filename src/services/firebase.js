@@ -48,10 +48,7 @@ export async function getDocumentByArrays(arr, getQuery) {
                 ...result.data(),
                 docId: result.id,
               }));
-              const modifyProfiles = profiles.filter((profile) => {
-                console.log(!arr.includes(profile.userId));
-                return !arr.includes(profile.userId);
-              });
+              const modifyProfiles = profiles.filter((profile) => !arr.includes(profile.userId));
               resolve(modifyProfiles);
             });
         })
@@ -59,7 +56,6 @@ export async function getDocumentByArrays(arr, getQuery) {
     }
 
     Promise.all(batches).then((content) => {
-      console.log(content.flat());
       const stackArr = [];
       const duplicatedDeleteArr = content.flat().filter((e) => {
         if (stackArr.indexOf(e.userId) === -1) {
@@ -129,7 +125,6 @@ export async function getSuggestedProfiles(userId, following, maker) {
         ...user.data(),
         docId: user.id,
       }));
-      console.log('あっち');
     }
   } else {
     result = await collectionPath.where('userId', '!=', userId).where('maker', '==', maker).limit(15).get();

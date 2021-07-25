@@ -156,14 +156,10 @@ export default function ProfileEdit() {
               .where('comments', '!=', [])
               .get()
               .then(async (res) => {
-                console.log('おっと');
-                console.log(res.docs.map((doc) => ({ ...doc.data() })));
                 if (res.docs.length > 0) {
                   await Promise.all(
                     res.docs.map((doc) => {
-                      console.log(doc.id);
                       if (doc.data().comments.some((comment) => comment.displayName === activeUser.username)) {
-                        console.log(doc.id);
                         firebase
                           .firestore()
                           .collection('photos')
@@ -182,13 +178,9 @@ export default function ProfileEdit() {
                       }
                       return doc;
                     })
-                  )
-                    .then(() => {
-                      console.log('コメントのユーザーネーム更新成功');
-                    })
-                    .catch((error) => {
-                      throw new Error(error.message);
-                    });
+                  ).catch((error) => {
+                    throw new Error(error.message);
+                  });
                 }
               });
 
@@ -232,14 +224,10 @@ export default function ProfileEdit() {
               .where('comments', '!=', [])
               .get()
               .then(async (res) => {
-                console.log('おっと');
-                console.log(res.docs.map((doc) => ({ ...doc.data() })));
                 if (res.docs.length > 0) {
                   await Promise.all(
                     res.docs.map((doc) => {
-                      console.log(doc.id);
                       if (doc.data().comments.some((comment) => comment.displayName === activeUser.username)) {
-                        console.log(doc.id);
                         firebase
                           .firestore()
                           .collection('photos')
@@ -258,13 +246,9 @@ export default function ProfileEdit() {
                       }
                       return doc;
                     })
-                  )
-                    .then(() => {
-                      console.log('コメントのユーザーネーム更新成功');
-                    })
-                    .catch((error) => {
-                      throw new Error(error.message);
-                    });
+                  ).catch((error) => {
+                    throw new Error(error.message);
+                  });
                 }
               });
 
