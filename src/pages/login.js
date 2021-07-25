@@ -33,7 +33,6 @@ export default function Login() {
     });
 
   const openResetModal = () => {
-    console.log('ボタンが押されました');
     setIsResetModalOpen(true);
     backfaceFixed(true);
   };

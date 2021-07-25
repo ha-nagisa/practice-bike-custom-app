@@ -1,11 +1,13 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { updateLoggedInUserFollowing, updateFollowedUserFollowers, getUserByUserId } from '../../services/firebase';
 import LoggedInUserContext from '../../context/logged-in-user';
+import DEFAULT_IMAGE_PATH from '../../constants/paths';
 
 export default function MobileSuggestedProfile({ profileDocId, username, profileId, userId, loggedInUserDocId, profileImageUrl }) {
   const { user: activeUser, setActiveUser } = useContext(LoggedInUserContext);
+  const [loaded, setLoaded] = useState(false);
   const isFollowing = activeUser.following.some((userId) => userId === profileId);
 
   async function handleFollowUser() {
@@ -27,11 +29,13 @@ export default function MobileSuggestedProfile({ profileDocId, username, profile
         <Link className="w-auto break-all" to={`/p/${username}`}>
           <img
             className="rounded-full w-10 h-10 object-cover flex mr-3"
-            src={!profileImageUrl ? `/images/avatars/${username}.jpg` : profileImageUrl}
-            alt=""
+            // eslint-disable-next-line no-nested-ternary
+            src={loaded ? profileImageUrl || DEFAULT_IMAGE_PATH : DEFAULT_IMAGE_PATH}
+            alt={`${username} profile`}
             onError={(e) => {
-              e.target.src = `/images/avatars/default.png`;
+              e.target.src = DEFAULT_IMAGE_PATH;
             }}
+            onLoad={() => setLoaded(true)}
           />
         </Link>
       </div>

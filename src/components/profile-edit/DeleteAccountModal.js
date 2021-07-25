@@ -23,26 +23,20 @@ export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
   };
 
   const deleteAccount = async () => {
-    console.log('ボタンが押されました');
     setIsLoading(true);
     try {
       // Authから削除されたユーザーを削除
       await firebase
         .auth()
         .currentUser.delete()
-        .then(() => {
-          console.log('authからユーザー削除成功');
-        })
         .catch((error) => {
           throw new Error(error.message);
         });
 
       // 削除されたユーザーが投稿した写真にお気に入りしたユーザーのlikesから削除
       const activeUserPhotoIds = loggedInUserPhotos.map((photo) => photo.docId);
-      console.log(activeUserPhotoIds);
       const getQuery = (batch) => firebase.firestore().collection('users').where('likes', 'array-contains-any', batch);
       const LikedUser = await getDocumentByArraysIn(activeUserPhotoIds, getQuery);
-      console.log(LikedUser);
       if (LikedUser && LikedUser.length > 0) {
         await Promise.all(
           LikedUser.map((user) => {
@@ -55,24 +49,18 @@ export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
               });
             return user;
           })
-        )
-          .then(() => {
-            console.log('削除されたユーザーが投稿した写真にお気に入りしたユーザーのlikesから削除成功');
-          })
-          .catch((error) => {
-            throw new Error(error.message);
-          });
+        ).catch((error) => {
+          throw new Error(error.message);
+        });
       }
 
       // 投稿のお気に入りにある削除されたユーザーのIDを削除
-      console.log(activeUser.userId);
       await firebase
         .firestore()
         .collection('photos')
         .where('likes', 'array-contains', `${activeUser.userId}`)
         .get()
         .then(async (res) => {
-          console.log(res.docs.map((doc) => ({ ...doc.data() })));
           await Promise.all(
             res.docs.map((doc) => {
               firebase
@@ -84,13 +72,9 @@ export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
                 });
               return doc;
             })
-          )
-            .then(() => {
-              console.log('投稿のお気に入りにある削除されたユーザーのIDを削除成功');
-            })
-            .catch((error) => {
-              throw new Error(error.message);
-            });
+          ).catch((error) => {
+            throw new Error(error.message);
+          });
         });
 
       // 削除されたユーザーのコメントを削除
@@ -100,12 +84,10 @@ export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
         .where('comments', '!=', [])
         .get()
         .then(async (res) => {
-          console.log(res.docs.map((doc) => ({ ...doc.data() })));
           if (res.docs.length > 0) {
             await Promise.all(
               res.docs.map((doc) => {
                 if (doc.data().comments.some((comment) => comment.displayName === activeUser.username)) {
-                  console.log(doc.id);
                   firebase
                     .firestore()
                     .collection('photos')
@@ -116,13 +98,9 @@ export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
                 }
                 return doc;
               })
-            )
-              .then(() => {
-                console.log('削除されたユーザーのコメントを削除成功');
-              })
-              .catch((error) => {
-                throw new Error(error.message);
-              });
+            ).catch((error) => {
+              throw new Error(error.message);
+            });
           }
         });
 
@@ -133,11 +111,9 @@ export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
         .where('following', 'array-contains', `${activeUser.userId}`)
         .get()
         .then(async (res) => {
-          console.log(res.docs.map((doc) => ({ ...doc.data() })));
           if (res.docs.length > 0) {
             await Promise.all(
               res.docs.map((doc) => {
-                console.log(doc.id);
                 firebase
                   .firestore()
                   .collection('users')
@@ -147,13 +123,9 @@ export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
                   });
                 return doc;
               })
-            )
-              .then(() => {
-                console.log('すべてのユーザーのフォローから削除されたユーザーを削除成功');
-              })
-              .catch((error) => {
-                throw new Error(error.message);
-              });
+            ).catch((error) => {
+              throw new Error(error.message);
+            });
           }
         });
 
@@ -164,11 +136,9 @@ export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
         .where('followers', 'array-contains', `${activeUser.userId}`)
         .get()
         .then(async (res) => {
-          console.log(res.docs.map((doc) => ({ ...doc.data() })));
           if (res.docs.length > 0) {
             await Promise.all(
               res.docs.map((doc) => {
-                console.log(doc.id);
                 firebase
                   .firestore()
                   .collection('users')
@@ -178,13 +148,9 @@ export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
                   });
                 return doc;
               })
-            )
-              .then(() => {
-                console.log('すべてのユーザーのフォロワーから削除されたユーザーを削除成功');
-              })
-              .catch((error) => {
-                throw new Error(error.message);
-              });
+            ).catch((error) => {
+              throw new Error(error.message);
+            });
           }
         });
 
@@ -194,9 +160,6 @@ export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
         .collection('users')
         .doc(activeUser.docId)
         .delete()
-        .then(() => {
-          console.log('firestoreからユーザー削除成功');
-        })
         .catch((error) => {
           throw new Error(error.message);
         });
@@ -208,13 +171,9 @@ export default function DeleteAccountModal({ setIsDeleteAccountModalOpen }) {
             firebase.firestore().collection('photos').doc(photo.docId).delete();
             return photo;
           })
-        )
-          .then(() => {
-            console.log('投稿したPhotoを削除成功');
-          })
-          .catch((error) => {
-            throw new Error(error.message);
-          });
+        ).catch((error) => {
+          throw new Error(error.message);
+        });
       }
       successDeleteToast();
       backfaceFixed(false);

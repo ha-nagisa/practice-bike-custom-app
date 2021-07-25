@@ -1,11 +1,13 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { updateLoggedInUserFollowing, updateFollowedUserFollowers, getUserByUserId } from '../../services/firebase';
 import LoggedInUserContext from '../../context/logged-in-user';
+import DEFAULT_IMAGE_PATH from '../../constants/paths';
 
 export default function SuggestedProfile({ profileDocId, username, profileId, userId, loggedInUserDocId, profileImageUrl }) {
   const { user: activeUser, setActiveUser } = useContext(LoggedInUserContext);
+  const [loaded, setLoaded] = useState(false);
   const isFollowing =
     activeUser.following && activeUser.following !== undefined ? activeUser.following.some((userId) => userId === profileId) : false;
 
@@ -28,11 +30,12 @@ export default function SuggestedProfile({ profileDocId, username, profileId, us
       <div className="flex items-center justify-between">
         <img
           className="rounded-full w-8 h-8 object-cover flex mr-3"
-          src={!profileImageUrl ? `/images/avatars/${username}.jpg` : profileImageUrl}
-          alt=""
+          src={loaded ? profileImageUrl || DEFAULT_IMAGE_PATH : DEFAULT_IMAGE_PATH}
+          alt={`${username} profile`}
           onError={(e) => {
-            e.target.src = `/images/avatars/default.png`;
+            e.target.src = DEFAULT_IMAGE_PATH;
           }}
+          onLoad={() => setLoaded(true)}
         />
         <Link className="w-auto break-all" to={`/p/${username}`}>
           <p className="font-bold text-sm break-all">{username}</p>
