@@ -28,7 +28,6 @@ export default function Profile({ user, setIsOpenFollowingModal, setIsOpenFollow
       dispatch({ profile: user, photosCollection: photos, followerCount: user.followers.length });
     }
     getProfileInfoAndPhotos();
-    console.log('こんにちは');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user.username, loggedInUserPhotos]);
 
