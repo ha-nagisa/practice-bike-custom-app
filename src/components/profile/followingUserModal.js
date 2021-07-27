@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import backfaceFixed from '../../utils/backfaceFixed';
 import { getProfileFollowingUsers } from '../../services/firebase';
+import DEFAULT_IMAGE_PATH from '../../constants/paths';
 
 export default function FollowingUserModal({ user, setIsOpenFollowingModal }) {
   const history = useHistory();
@@ -41,7 +42,7 @@ export default function FollowingUserModal({ user, setIsOpenFollowingModal }) {
                 <button type="button" className="w-full text-left" onClick={() => leadProfile(u.username)}>
                   <img
                     className="w-8 h-8 object-cover rounded-full inline-block mr-3"
-                    src={!u.bikeImageUrl ? '/images/avatars/default.png' : u.bikeImageUrl}
+                    src={!u.bikeImageUrl ? DEFAULT_IMAGE_PATH : u.bikeImageUrl}
                     alt="name"
                   />
                   <p className="inline-block">{u.username}</p>
