@@ -26,14 +26,14 @@ export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
   const isInvalid = title === '' || description === '' || category === '' || workHours === '' || workMoney === '' || workImage === null;
 
   const onChangeImageHandler = (e) => {
-    if (e.target.files[0]) {
-      setWorkImage(e.target.files[0]);
+    if (e.currentTarget.files[0]) {
+      setWorkImage(e.currentTarget.files[0]);
 
-      const selectedFile = e.target.files[0];
+      const selectedFile = e.currentTarget.files[0];
       const imageUrl = URL.createObjectURL(selectedFile);
       setPreviewWorkImageSrc(imageUrl);
 
-      e.target.value = '';
+      e.currentTarget.value = '';
     }
   };
 
@@ -93,12 +93,12 @@ export default function PostEditModal({ isModalOpen, setIsModalOpen }) {
   return (
     <>
       <div className="fixed z-30 top-0 left-0 w-full h-full">
-        <button type="button" onClick={() => closeModal()} className="bg-black-base opacity-70 cursor-pointer h-full w-full" />
+        <button type="button" aria-label="閉じる" onClick={() => closeModal()} className="bg-black-base opacity-70 cursor-pointer h-full w-full" />
         <div className="bg-white absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 h-80vh w-4/5 z-10 rounded max-w-screen-lg min-w-300px">
           <div className="bg-white flex justify-center overflow-auto w-full h-full rounded">
             <form className="grid bg-white rounded-lg w-full" onSubmit={handleChangePost} method="POST">
               <div className="grid grid-cols-1 mt-8 mx-7">
-                <label className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">写真をアップロード</label>
+                <p className="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold mb-1">写真をアップロード</p>
                 <div className="flex items-center justify-center w-full">
                   {workImage ? (
                     <div>
