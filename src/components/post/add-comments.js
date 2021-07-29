@@ -2,6 +2,7 @@ import { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import FirebaseContext from '../../context/firebase';
 import UserContext from '../../context/user';
+import UserPhotosContext from '../../context/userPhotos';
 
 export default function AddComment({ docId, comments, setComments, commentInput }) {
   const [comment, setComment] = useState('');
@@ -9,12 +10,24 @@ export default function AddComment({ docId, comments, setComments, commentInput 
   const {
     user: { displayName },
   } = useContext(UserContext);
+  const { loggedInUserPhotos, setLoggedInUserPhotos } = useContext(UserPhotosContext);
 
   const handleSubmitComment = (event) => {
     event.preventDefault();
 
     setComments([...comments, { displayName, comment }]);
     setComment('');
+
+    if (loggedInUserPhotos.some((photo) => photo.docId === docId)) {
+      setLoggedInUserPhotos((prevPhotos) =>
+        prevPhotos.map((photo) => {
+          if (photo.docId === docId) {
+            photo.comments = [...photo.comments, { displayName, comment }];
+          }
+          return photo;
+        })
+      );
+    }
 
     return firebase
       .firestore()

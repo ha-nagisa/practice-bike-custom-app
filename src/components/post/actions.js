@@ -1,17 +1,23 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import FirebaseContext from '../../context/firebase';
 import UserContext from '../../context/user';
 import LoggedInUserContext from '../../context/logged-in-user';
+import UserPhotosContext from '../../context/userPhotos';
 
 export default function Actions({ docId, totalLikes, likedPhoto, handleFocus }) {
   const {
     user: { uid: userId },
   } = useContext(UserContext);
   const { user: loggedInUser, setActiveUser } = useContext(LoggedInUserContext);
+  const { loggedInUserPhotos, setLoggedInUserPhotos } = useContext(UserPhotosContext);
   const [toggleLiked, setToggleLiked] = useState(likedPhoto);
   const [likes, setLikes] = useState(totalLikes);
   const { firebase, FieldValue } = useContext(FirebaseContext);
+
+  useEffect(() => {
+    setToggleLiked(likedPhoto);
+  }, [likedPhoto]);
 
   const handleToggleLiked = async () => {
     setToggleLiked((toggleLiked) => !toggleLiked);
@@ -38,6 +44,18 @@ export default function Actions({ docId, totalLikes, likedPhoto, handleFocus }) 
       ...loggedInUser,
       likes: toggleLiked ? loggedInUser.likes.filter((likeId) => likeId !== docId) : [...loggedInUser.likes, docId],
     });
+
+    if (loggedInUserPhotos.some((photo) => photo.docId === docId)) {
+      setLoggedInUserPhotos((prevPhotos) =>
+        prevPhotos.map((photo) => {
+          if (photo.docId === docId) {
+            photo.userLikedPhoto = !likedPhoto;
+            photo.likes = toggleLiked ? photo.likes.filter((uId) => uId !== userId) : [...photo.likes, userId];
+          }
+          return photo;
+        })
+      );
+    }
   };
 
   return (
